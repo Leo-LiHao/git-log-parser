@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/gaborantal/git-log-parser.svg?branch=master)](https://travis-ci.org/gaborantal/git-log-parser)
+
 GitLogParser
 ============
 
