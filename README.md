@@ -56,3 +56,4 @@ Script is intented to be used via commandline where you pipe 'git log' output to
 	Chiu             jchiu@LM-SJN-0071330  7b9ce47   Added splash screen and refactor filenames
 	Chiu             jchiu@LM-SJN-0071330  5885eb7   Working MediaService, SongList and SongView
 	Chiu             jchiu@LM-SJN-0071330  c6f4003   Remove bin and gen directories
+	
