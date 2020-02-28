@@ -6,6 +6,7 @@ import sys
 import re
 import argparse
 import subprocess
+import os
 
 
 def parse_datetime(date_string):
@@ -23,19 +24,55 @@ def parse_datetime(date_string):
         return date_string
 
 def get_log():
+    #create the -dir and -mDir arguments
     argParser = argparse.ArgumentParser(description='Parse a git repos log into a csv')
-    argParser.add_argument('-dir', '--directory', metavar = '' ,help="Your repo's directory")
+    group = argParser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-dir', '--directory', metavar = '', help='Extracts the specified directory as a repo')
+    group.add_argument('-mDir', '--multiple_directories', metavar = '', help="Extracts every subdirectory as a repo")
     args = argParser.parse_args()
     
-    try:
-        gitLogResult = subprocess.run(['git', 'log'], capture_output=True, text=True, cwd=args.directory)
-        return gitLogResult.stdout
-    except:
-        print('The specified directory could not be opened.')
-        return
+    #attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
+    if args.directory:    
+        try:
+            gitLogResult = subprocess.run(['git', 'log'], capture_output=True, text=True, cwd=args.directory)
+            create_csv(gitLogResult.stdout)
+            return
+        except:
+            print('The specified directory could not be opened.')
+            return
     
+    else:      
+        try:
+            #only the top level directories are needed, so if the inner for finishes the function returns
+            for walkResults in os.walk(args.multiple_directories):
+                #call the csv function for every subdirectory
+                for dir in walkResults[1]:
+                #no exception is handeled here, since only the previously extracted directories are being opened
+                    gitLogResult = subprocess.run(['git', 'log'], capture_output=True, text=True, cwd=args.multiple_directories+'/'+dir)
+                    create_csv(gitLogResult.stdout, dir)
+                return
 
+        except:
+            print('The specified directory could not be opened.')
+            return
 
+#will be later updated to generate JSON instead    
+def create_csv(git_log_result, attempted_directory=None):
+    logParser = GitLogParser()
+    logParser.parse_lines(git_log_result)
+    # print commits
+    print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) +'  ' + 'Hash'.ljust(8) + '  ' + 'Message'.ljust(20))
+    print("=================================================================================")
+    for commit in logParser.commits:
+        if commit.message is None:
+            commit.message = 'No message provided'
+        print(str(commit.commit_date) + '  ' + commit.author.name.ljust(15) + '  ' + commit.author.email.ljust(20) + '  ' +  commit.commit_hash[:7].ljust(8) + '  ' + commit.message)
+    #specify which directory has been mined, only if there were multiple options
+    with open('logdata_' + attempted_directory + '.csv' if attempted_directory else 'new' + '.csv', 'w', encoding='utf-8') as f:
+        for commit in logParser.commits:
+            f.write(str(commit))
+            f.write('\n')
+    
 class Author(object):
     """Simple class to store Git author's name and email."""
 
@@ -119,22 +156,4 @@ class GitLogParser(object):
 
 
 if __name__ == '__main__':
-    # parseCommit(sys.stdin.readlines())
-    logParser = GitLogParser()
-    git_log = get_log()
-
-    if git_log:
-        logParser.parse_lines(git_log)
-        
-        # print commits
-        print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) +'  ' + 'Hash'.ljust(8) + '  ' + 'Message'.ljust(20))
-        print("=================================================================================")
-        for commit in logParser.commits:
-            if commit.message is None:
-                commit.message = 'No message provided'
-            print(str(commit.commit_date) + '  ' + commit.author.name.ljust(15) + '  ' + commit.author.email.ljust(20) + '  ' +  commit.commit_hash[:7].ljust(8) + '  ' + commit.message)
-
-        with open('logdata_new.csv', 'w', encoding='utf-8') as f:
-            for commit in logParser.commits:
-                f.write(str(commit))
-                f.write('\n')
+    get_log()
