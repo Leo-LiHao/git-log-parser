@@ -4,6 +4,8 @@ import copy
 import datetime
 import sys
 import re
+import argparse
+import subprocess
 
 
 def parse_datetime(date_string):
@@ -19,6 +21,19 @@ def parse_datetime(date_string):
         return datetime.datetime.strptime(date_string, FORMAT_STRING)
     except ValueError:
         return date_string
+
+def get_log():
+    argParser = argparse.ArgumentParser(description='Parse a git repos log into a csv')
+    argParser.add_argument('-dir', '--directory', metavar = '' ,help="Your repo's directory")
+    args = argParser.parse_args()
+    
+    try:
+        gitLogResult = subprocess.run(['git', 'log'], capture_output=True, text=True, cwd=args.directory)
+        return gitLogResult.stdout
+    except:
+        print('The specified directory could not be opened.')
+        return
+    
 
 
 class Author(object):
@@ -56,7 +71,7 @@ class GitLogParser(object):
     def parse_lines(self, raw_lines):
         commit = CommitData()
         # iterate lines and save
-        for nextLine in raw_lines:
+        for nextLine in raw_lines.splitlines():
             if len(nextLine.strip()) == 0:
                 # ignore empty lines
                 pass
@@ -105,20 +120,21 @@ class GitLogParser(object):
 
 if __name__ == '__main__':
     # parseCommit(sys.stdin.readlines())
-    parser = GitLogParser()
+    logParser = GitLogParser()
+    git_log = get_log()
 
-    with open(r'd:\jscallgraphstuff\iccsa-extension-smrunner\workdir\log', 'r', encoding='utf-8') as f:
-        parser.parse_lines(f.readlines())
+    if git_log:
+        logParser.parse_lines(git_log)
+        
+        # print commits
+        print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) +'  ' + 'Hash'.ljust(8) + '  ' + 'Message'.ljust(20))
+        print("=================================================================================")
+        for commit in logParser.commits:
+            if commit.message is None:
+                commit.message = 'No message provided'
+            print(str(commit.commit_date) + '  ' + commit.author.name.ljust(15) + '  ' + commit.author.email.ljust(20) + '  ' +  commit.commit_hash[:7].ljust(8) + '  ' + commit.message)
 
-    # print commits
-    print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) +'  ' + 'Hash'.ljust(8) + '  ' + 'Message'.ljust(20))
-    print("=================================================================================")
-    for commit in parser.commits:
-        if commit.message is None:
-            commit.message = 'No message provided'
-        print(str(commit.commit_date) + '  ' + commit.author.name.ljust(15) + '  ' + commit.author.email.ljust(20) + '  ' +  commit.commit_hash[:7].ljust(8) + '  ' + commit.message)
-
-    with open('logdata_new.csv', 'w', encoding='utf-8') as f:
-        for commit in parser.commits:
-            f.write(str(commit))
-            f.write('\n')
+        with open('logdata_new.csv', 'w', encoding='utf-8') as f:
+            for commit in logParser.commits:
+                f.write(str(commit))
+                f.write('\n')
