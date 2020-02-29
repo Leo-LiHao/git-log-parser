@@ -8,6 +8,12 @@ class Author(object):
     def __str__(self):
         return "%s (%s)" % (self.name, self.email)
 
+    def to_json(self):
+        return {
+            'name' : self.name,
+            'email' : self.email,
+        }
+
 
 class CommitData(object):
     """Simple class to store Git commit data."""
@@ -24,3 +30,13 @@ class CommitData(object):
     def __str__(self):
         return "%s;%s;%s;%s;%s" % (self.commit_hash, self.author, self.message,
                                    str(self.commit_date), self.change_id)
+    
+    # creates a dictionary that represents the class, since the author is a multivalue field, is has to be converted separately
+    def to_json(self):
+        return{
+            'commit_hash' : self.commit_hash,
+            'author' : self.author.to_json(),
+            'message' : self.message,
+            'commit_date' : str(self.commit_date),
+            'change_id' : self.change_id,
+        }
