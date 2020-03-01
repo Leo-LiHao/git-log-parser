@@ -54,7 +54,10 @@ def get_log(args):
 # process the mined data and store it in JSON
 def create_json(git_log_result, attempted_directory=None):
     logParser = GitLogParser()
-    logParser.parse_lines(git_log_result)
+    try:
+        logParser.parse_lines(git_log_result)
+    except models.UnexpectedLineError as ex:
+        print(ex)
     # print commits
     print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) + '  ' + 'Hash'.ljust(
         8) + '  ' + 'Message'.ljust(20))
@@ -65,17 +68,52 @@ def create_json(git_log_result, attempted_directory=None):
         print(str(commit.commit_date) + '  ' + commit.author.name.ljust(15) + '  ' + commit.author.email.ljust(
             20) + '  ' + commit.commit_hash[:7].ljust(8) + '  ' + commit.message)
     # specify which directory has been mined, only if there were multiple options
-    with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w',
-        encoding='utf-8') as f:
-        json.dump(logParser, f, indent=4, cls=CommitEncoder, sort_keys=True)
+    if logParser.commits:
+        with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w',
+            encoding='utf-8') as f:
+            json.dump(logParser, f, indent=4, cls=CommitEncoder, sort_keys=True)
 
 class GitLogParser(object):
 
     def __init__(self):
         self.commits = []
 
-    def parse_lines(self, raw_lines):
-        commit = models.CommitData()
+    def parse_commit_hash(self, nextLine, commit):
+        # commit xxxx
+        if commit.commit_hash is not None:
+            # new commit, reset object
+            self.commits.append(copy.deepcopy(commit))
+            commit = models.CommitData()
+        commit.commit_hash = re.match('commit (.*)',
+                                      nextLine, re.IGNORECASE).group(1)
+
+        return commit
+                
+
+    def parse_author(self, nextLine, commit):
+        # Author: xxxx <xxxx@xxxx.com>
+        m = re.compile('Author: (.*) <(.*)>').match(nextLine)
+        commit.author.name = m.group(1)
+        commit.author.email = m.group(2)
+
+    def parse_date(self, nextLine, commit):
+        # Date: xxx
+        m = re.compile(r'Date:\s+(.*)$').match(nextLine)
+        commit.commit_date = parse_datetime(m.group(1))
+
+    def parse_commit_msg(self, nextLine, commit):
+        # (4 empty spaces)
+        # Here we just save the header of the commit message
+        if commit.message is None:
+            commit.message = nextLine.strip()
+
+    def parse_change_id(self, nextLine, commit):
+        commit.change_id = re.compile(r'    Change-Id:\s*(.*)').match(
+                nextLine).group(1)
+
+    def parse_lines(self, raw_lines, commit = None):
+        if commit is None:
+            commit = models.CommitData()
         # iterate lines and save
         for nextLine in raw_lines.splitlines():
             if len(nextLine.strip()) == 0:
@@ -83,40 +121,26 @@ class GitLogParser(object):
                 pass
 
             elif bool(re.match('commit', nextLine, re.IGNORECASE)):
-                # commit xxxx
-                if commit.commit_hash is not None:
-                    # new commit, reset object
-                    self.commits.append(copy.deepcopy(commit))
-                    commit = models.CommitData()
-                commit.commit_hash = re.match('commit (.*)',
-                                              nextLine, re.IGNORECASE).group(1)
+                commit = copy.deepcopy(self.parse_commit_hash(nextLine, commit))
 
             elif bool(re.match('merge:', nextLine, re.IGNORECASE)):
                 # Merge: xxxx xxxx
                 pass
 
             elif bool(re.match('author:', nextLine, re.IGNORECASE)):
-                # Author: xxxx <xxxx@xxxx.com>
-                m = re.compile('Author: (.*) <(.*)>').match(nextLine)
-                commit.author.name = m.group(1)
-                commit.author.email = m.group(2)
+                self.parse_author(nextLine, commit)
 
             elif bool(re.match('date:', nextLine, re.IGNORECASE)):
-                # Date: xxx
-                m = re.compile(r'Date:\s+(.*)$').match(nextLine)
-                commit.commit_date = parse_datetime(m.group(1))
+                self.parse_date(nextLine, commit)
 
             elif bool(re.match('    ', nextLine, re.IGNORECASE)):
-                # (4 empty spaces)
-                # Here we just save the header of the commit message
-                if commit.message is None:
-                    commit.message = nextLine.strip()
-                if bool(re.match('    change-id: ', nextLine,
-                                 re.IGNORECASE)):
-                    commit.change_id = re.compile('    Change-Id:\s*(.*)').match(
-                        nextLine).group(1)
+                self.parse_commit_msg(nextLine, commit)
+
+            elif bool(re.match('    change-id: ', nextLine, re.IGNORECASE)):
+                self.parse_change_id(nextLine, commit)
+
             else:
-                print('ERROR: Unexpected Line: ' + nextLine)
+                raise models.UnexpectedLineError(nextLine)
 
 # a new encoder is necessary to make the json dumb creation clean and readable
 class CommitEncoder(json.JSONEncoder):
