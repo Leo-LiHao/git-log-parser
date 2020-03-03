@@ -90,11 +90,10 @@ class GitLogParser(object):
         return commit
                 
 
-    def parse_author(self, nextLine, commit):
+    def parse_author(self, nextLine):
         # Author: xxxx <xxxx@xxxx.com>
         m = re.compile('Author: (.*) <(.*)>').match(nextLine)
-        commit.author.name = m.group(1)
-        commit.author.email = m.group(2)
+        return models.Author(m.group(1), m.group(2))
 
     def parse_date(self, nextLine, commit):
         # Date: xxx
@@ -128,7 +127,7 @@ class GitLogParser(object):
                 pass
 
             elif bool(re.match('author:', nextLine, re.IGNORECASE)):
-                self.parse_author(nextLine, commit)
+                commit.author = self.parse_author(nextLine)
 
             elif bool(re.match('date:', nextLine, re.IGNORECASE)):
                 self.parse_date(nextLine, commit)
@@ -141,6 +140,8 @@ class GitLogParser(object):
 
             else:
                 raise models.UnexpectedLineError(nextLine)
+        
+        return commit
 
 # a new encoder is necessary to make the json dumb creation clean and readable
 class CommitEncoder(json.JSONEncoder):

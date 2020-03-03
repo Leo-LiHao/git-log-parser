@@ -51,9 +51,9 @@ class CommitData(object):
     
 
     def __eq__(self, other):
-
-        return (self.commit_hash == other.commit_hash 
-            and self.author == other.author 
-            and self.message == other.message 
-            and self.commit_date == other.commit_date 
-            and self.change_id == other.change_id)
+        if isinstance(other, CommitData):
+            return (self.commit_hash == other.commit_hash 
+                and self.author == other.author 
+                and self.message == other.message 
+                and str(self.commit_date) == str(other.commit_date) 
+                and self.change_id == other.change_id)
