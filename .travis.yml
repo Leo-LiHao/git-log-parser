@@ -8,4 +8,4 @@ python:
     - "3.8"
     - "3.8-dev"
     - "nightly"
-script: python -m unittest discover
+script: pytest
