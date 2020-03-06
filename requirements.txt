@@ -1,5 +1,5 @@
 attrs==19.3.0
--e git+https://github.com/gaborantal/git-log-parser.git@a59b6eeaea42efe80391e92475587046bc165f07#egg=gitlogparser
+-e git+https://github.com/gaborantal/git-log-parser.git@26c9cac06dea5b30165d7078a53a5dc865cb62f4#egg=gitlogparser
 importlib-metadata==1.5.0
 more-itertools==8.2.0
 packaging==20.1
