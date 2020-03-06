@@ -102,9 +102,10 @@ class GitLogParser(object):
 
     def parse_commit_msg(self, nextLine, commit):
         # (4 empty spaces)
-        # Here we just save the header of the commit message
         if commit.message is None:
             commit.message = nextLine.strip()
+        else:
+            commit.message = commit.message + os.linesep + nextLine.strip()
 
     def parse_change_id(self, nextLine, commit):
         commit.change_id = re.compile(r'    Change-Id:\s*(.*)').match(
@@ -115,6 +116,7 @@ class GitLogParser(object):
             commit = models.CommitData()
         # iterate lines and save
         for nextLine in raw_lines.splitlines():
+            #print(nextLine)
             if len(nextLine.strip()) == 0:
                 # ignore empty lines
                 pass
