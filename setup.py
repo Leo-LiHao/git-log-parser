@@ -17,7 +17,7 @@ setuptools.setup(
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.4',
+    python_requires='>=3.5',
     entry_points={
         'console_scripts': [
             'gitlogparser=gitlogparser.main:main',
