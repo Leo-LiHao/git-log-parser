@@ -1,12 +1,19 @@
+astroid==2.3.3
 attrs==19.3.0
--e git+https://github.com/gaborantal/git-log-parser.git@fc346a07209da1f321c914bdc977f8d6298a5859#egg=gitlogparser
+-e git+https://github.com/gaborantal/git-log-parser.git@e8d4bf0ad8f030eaf0d5656b26520f8eed52a209#egg=gitlogparser
 importlib-metadata==1.5.0
+isort==4.3.21
+lazy-object-proxy==1.4.3
+mccabe==0.6.1
 more-itertools==8.2.0
-packaging==20.1
+packaging==20.3
 pluggy==0.13.1
 py==1.8.1
+pylint==2.4.4
 pyparsing==2.4.6
 pytest==5.3.5
 six==1.14.0
+typed-ast==1.4.1
 wcwidth==0.1.8
-zipp==3.0.0
+wrapt==1.11.2
+zipp==3.1.0
