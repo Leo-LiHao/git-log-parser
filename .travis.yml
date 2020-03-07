@@ -10,4 +10,6 @@ python:
 install:
   - pip install -r requirements.txt
 
-script: pytest
+script:
+  - pytest
+  - pytest --cov=gitlogparser tests/
