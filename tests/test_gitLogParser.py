@@ -1,5 +1,6 @@
 import pytest
 import copy
+import json
 
 from gitlogparser import parser
 from gitlogparser import models
@@ -87,3 +88,28 @@ Date:   Fri Aug 28 19:20:01 2002 +0400
 def test_prase_lines_unexpected_input(gitParser):
     with pytest.raises(models.UnexpectedLineError):
         gitParser.parse_lines('Suprise!')
+
+def test_dummy_commit_singleDir():
+    class dummyArgs(object):
+        def __init__(self, dir):
+            self.directory = dir
+    args = dummyArgs('./git-log-parser')
+    parser.get_log(args)
+    with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
+        with open('./tests/logdata_new.json', 'r', encoding='utf-8') as f2:
+            correct_result = json.load(f)
+            current_result = json.load(f2)
+            assert correct_result == current_result
+    
+def test_dummmy_commit_mDir():
+    class dummyArgs(object):
+        def __init__(self, dir):
+            self.directory = None
+            self.multiple_directories = dir
+    args = dummyArgs('./git-log-parser')
+    parser.get_log(args)
+    with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
+        with open('./tests/logdata_.git.json', 'r', encoding='utf-8') as f2:
+            correct_result = json.load(f)
+            current_result = json.load(f2)
+            assert correct_result == current_result

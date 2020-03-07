@@ -1,0 +1,72 @@
+[
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 17:58:37+01:00",
+        "commit_hash": "e81d19d2cc8a2484edd983f40872b3a7ae1d9f04",
+        "message": "Added the mDir argument so multiple repos can be processed at once\nMoved the output generation to separate function"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 15:56:59+01:00",
+        "commit_hash": "9f6debef550a3a30e5c6b422115f869733bc9431",
+        "message": "Added the ability to choose repo directory\nargParser in a temporary place\nGitLogParser class slightly modified, so it can correctly read the new input"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "G\u00e1bor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2019-09-03 17:07:34+02:00",
+        "commit_hash": "bfffe073ed7d98ae4be7e15968d16fa85e1ead62",
+        "message": "Reimplemented gitLogParse.py\nIn this commit, classes are introduced in order to ease parsing\ngit commits. Corresponding objects created after parsing the log file.\nThese objects are then rewritten into a usable, automatizable structure."
+    },
+    {
+        "author": {
+            "email": "tejes@hac.hu",
+            "name": "Keleti M\u00e1rton"
+        },
+        "change_id": null,
+        "commit_date": "2017-11-15 16:10:32+01:00",
+        "commit_hash": "eee66b0b623c2dc3a99485a6d7428ad032a0bc5a",
+        "message": "Added newline to file endings"
+    },
+    {
+        "author": {
+            "email": "gabiking@gmail.com",
+            "name": "kutyamutya"
+        },
+        "change_id": null,
+        "commit_date": "2017-11-14 21:55:20+01:00",
+        "commit_hash": "3d2dd7617d4f74a1c1d5f6a0053d530fc513fb8a",
+        "message": "Added travis support"
+    },
+    {
+        "author": {
+            "email": "gabiking@gmail.com",
+            "name": "kutyamutya"
+        },
+        "change_id": null,
+        "commit_date": "2017-11-14 21:43:35+01:00",
+        "commit_hash": "655b7d1961bd93f72e102ba6a067c43df30d8563",
+        "message": "Added travis support"
+    },
+    {
+        "author": {
+            "email": "jchiu@paypal.com",
+            "name": "John Chiu"
+        },
+        "change_id": null,
+        "commit_date": "2013-10-18 23:55:03-07:00",
+        "commit_hash": "962398800d6d43c9e56f708235f6259a7526a95f",
+        "message": "Rough working version"
+    }
+]

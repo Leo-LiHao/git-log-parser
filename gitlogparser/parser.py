@@ -59,14 +59,14 @@ def create_json(git_log_result, attempted_directory=None):
     except models.UnexpectedLineError as ex:
         print(ex)
     # print commits
-    print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) + '  ' + 'Hash'.ljust(
+    """print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) + '  ' + 'Hash'.ljust(
         8) + '  ' + 'Message'.ljust(20))
     print("=================================================================================")
     for commit in logParser.commits:
         if commit.message is None:
             commit.message = 'No message provided'
         print(str(commit.commit_date) + '  ' + commit.author.name.ljust(15) + '  ' + commit.author.email.ljust(
-            20) + '  ' + commit.commit_hash[:7].ljust(8) + '  ' + commit.message)
+            20) + '  ' + commit.commit_hash[:7].ljust(8) + '  ' + commit.message)"""
     # specify which directory has been mined, only if there were multiple options
     if logParser.commits:
         with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w',
