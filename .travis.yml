@@ -11,6 +11,6 @@ install:
   - pip install -r requirements.txt
 
 script:
-  - cd tests
+  - ls
   - pytest
   - pytest --cov=gitlogparser tests/
