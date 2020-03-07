@@ -1,6 +1,7 @@
 import pytest
 import copy
 import json
+import subprocess
 
 from gitlogparser import parser
 from gitlogparser import models
@@ -95,6 +96,7 @@ def test_dummy_commit_singleDir():
             self.directory = dir
     args = dummyArgs('./tests/git-log-parser')
     parser.get_log(args)
+    subprocess.run('ls')
     with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
         with open('logdata_new.json', 'r', encoding='utf-8') as f2:
             correct_result = json.load(f)
@@ -108,6 +110,7 @@ def test_dummmy_commit_mDir():
             self.multiple_directories = dir
     args = dummyArgs('./tests/git-log-parser')
     parser.get_log(args)
+    subprocess.run('ls')
     with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
         with open('logdata_.git.json', 'r', encoding='utf-8') as f2:
             correct_result = json.load(f)
