@@ -2,6 +2,406 @@
     {
         "author": {
             "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 15:02:09+01:00",
+        "commit_hash": "e2283aa5187cf190d99ce1c960097630d5678001",
+        "message": "Fixing travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 14:46:03+01:00",
+        "commit_hash": "f1fc925ee1ab9311e12698e43f7ff860edec0868",
+        "message": "Trying to figure out the issue with travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 14:40:16+01:00",
+        "commit_hash": "907de5e94157e198b2e753251502933f841c8367",
+        "message": "Fixing travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 14:35:45+01:00",
+        "commit_hash": "13d92c21a7d1f6d3bf0ea8d1d5a6857d222e7195",
+        "message": "Fixed tests"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 14:15:06+01:00",
+        "commit_hash": "54b9a0ae93a1605d8098d8954e080148d74e2d35",
+        "message": "Making tests travis friendly"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 14:11:46+01:00",
+        "commit_hash": "93b954d213d048ebf7522bde9916daf3f4be70e7",
+        "message": "Fixing travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 14:08:17+01:00",
+        "commit_hash": "9abd54581749b92dbc999e143a0f71fc95b1f738",
+        "message": "Fixing tests"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 14:02:42+01:00",
+        "commit_hash": "f7a59284280f22b891335a847ca978f0aa311088",
+        "message": "Fixing tests"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 13:53:56+01:00",
+        "commit_hash": "03911e2ca1eea92172f8c9efd1836ef928408230",
+        "message": "Written tests for every functional route"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 09:04:22+01:00",
+        "commit_hash": "f266eb471aeb0671c02dba2d5cba7c2955eb02cf",
+        "message": "Updated CI"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-07 08:25:59+01:00",
+        "commit_hash": "19769730d60f16da1c0c4bb75d8f650ea62467da",
+        "message": "Removed self-dependency from requirements.txt, cleanup"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 15:29:25+01:00",
+        "commit_hash": "554184ad706f3d7da56d9acfdf8607c02122caf5",
+        "message": "Compatibility testing"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 15:25:22+01:00",
+        "commit_hash": "b6c113857956f8567b731449e58ee35642b13532",
+        "message": "Compatibility testing"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 15:23:04+01:00",
+        "commit_hash": "42be3654cb6312b7af75ebd4ae122d5a3ba28ffc",
+        "message": "Compatibility testing"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 15:19:23+01:00",
+        "commit_hash": "e8d4bf0ad8f030eaf0d5656b26520f8eed52a209",
+        "message": "Compatibility testing"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 15:13:13+01:00",
+        "commit_hash": "fc346a07209da1f321c914bdc977f8d6298a5859",
+        "message": "Compatibility testing"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 14:45:24+01:00",
+        "commit_hash": "870e4bf657624b48a31cbec1099c7766ee093977",
+        "message": "Updated requirements.txt"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 14:37:16+01:00",
+        "commit_hash": "8ef61f13264adad7a1401e706c8ef60c1dc24663",
+        "message": "Updated requirements.txt"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 14:33:38+01:00",
+        "commit_hash": "85c5bde0c6b1842b672bbaedbe9a3676e456cf9f",
+        "message": "updated requirements.txt"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 14:25:55+01:00",
+        "commit_hash": "26c9cac06dea5b30165d7078a53a5dc865cb62f4",
+        "message": "Updated requirements.txt and lowered the required python version"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 14:00:48+01:00",
+        "commit_hash": "a59b6eeaea42efe80391e92475587046bc165f07",
+        "message": "Attempt at fixing travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 13:54:23+01:00",
+        "commit_hash": "a925fac33ee891780ff8e565d70f1f5a5bf132ee",
+        "message": "Attempt at fixing travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 13:51:09+01:00",
+        "commit_hash": "710fa5b7ac7ac34cfaca34ded8a5733a7ec1aa23",
+        "message": "Attemp at fixing travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 13:47:04+01:00",
+        "commit_hash": "5e1dfc63ffa8bb5ba4af58c477dd43a3cab7e98f",
+        "message": "Attempt at fixing travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-06 13:01:34+01:00",
+        "commit_hash": "efdfe83898ddb1abf6ebd1491fbe2bd3426ae0ac",
+        "message": "GitLogParser now reads the entire commit message"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-03 19:36:53+01:00",
+        "commit_hash": "034a4f1ea83d82e4345c7459e55d7327d3e1cb58",
+        "message": "Written tests for every function in the GitLogParser class"
+    },
+    {
+        "author": {
+            "email": "h879607@stud.u-szeged.hu",
+            "name": "Mosolyg\u00f3 Bal\u00e1zs"
+        },
+        "change_id": null,
+        "commit_date": "2020-03-01 20:51:24+01:00",
+        "commit_hash": "b1ce504d2d1ebdfd592e92ba172061fdad27f8fe",
+        "message": "Made the GitLogParser and CommitData classes test friendly\ncreated tests for all subfunctions\nGitLogParser's parse_linesis not yet tested for correct inputs\nthe gitlogparser test is in a temporary place"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-29 16:39:45+01:00",
+        "commit_hash": "86e684ddfb16f98f09211bb8087b6d321b25c145",
+        "message": "Merge branch 'master' of https://github.com/gaborantal/git-log-parser"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolyg\u00f3"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-29 16:39:03+01:00",
+        "commit_hash": "fb781b5ae228d2e7513d0e7677e462b2234b323c",
+        "message": "The mined data is now represented in json"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-29 10:54:42+01:00",
+        "commit_hash": "0bca61696b750e49dfa42f3c53f1fede92d6b890",
+        "message": "Test enhancement"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 23:38:36+01:00",
+        "commit_hash": "bf55c80997f5111cf78b21e5d875e1e1b9d285ab",
+        "message": "Updated travis.yml"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 23:21:22+01:00",
+        "commit_hash": "0ca1dfc18226007d130e8720b9792d36684dd036",
+        "message": "Made project structure"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 22:38:40+01:00",
+        "commit_hash": "b30d83d59b389c288e11a5e3b06d9b254271fd31",
+        "message": "Reset travis to use Linux"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 21:49:20+01:00",
+        "commit_hash": "57fe0252b0e33c678c712cec72c9eb09cd060505",
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 22:13:34+01:00",
+        "commit_hash": "52597cd95c8f9b32ab5494b62d4e243dcc200453",
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 22:10:28+01:00",
+        "commit_hash": "96a8c4243ba824244bfeedef2dd9338fcf35f08f",
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 22:04:23+01:00",
+        "commit_hash": "fb5827ae60133e9837f7af0afab16ea64b20cce4",
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 22:01:24+01:00",
+        "commit_hash": "a88f72c7d2437e9cf16d0f076889419157e2c31b",
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 21:53:24+01:00",
+        "commit_hash": "0a724301c8ef056bb3b28f3749de1ad9825a8ed1",
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 21:49:20+01:00",
+        "commit_hash": "f4ddc6471b086a107ad07a91f1cfdd586b27b8b6",
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
             "name": "Mosolyg\u00f3"
         },
         "change_id": null,
