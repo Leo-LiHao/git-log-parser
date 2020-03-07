@@ -1,6 +1,5 @@
 astroid==2.3.3
 attrs==19.3.0
--e git+https://github.com/gaborantal/git-log-parser.git@e8d4bf0ad8f030eaf0d5656b26520f8eed52a209#egg=gitlogparser
 importlib-metadata==1.5.0
 isort==4.3.21
 lazy-object-proxy==1.4.3
