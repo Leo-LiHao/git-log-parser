@@ -94,9 +94,8 @@ def test_dummy_commit_singleDir():
     class dummyArgs(object):
         def __init__(self, dir):
             self.directory = dir
-    args = dummyArgs('./tests/git-log-parser')
+    args = dummyArgs('./testRepo/git-log-parser')
     parser.get_log(args)
-    subprocess.run('ls')
     with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
         with open('logdata_new.json', 'r', encoding='utf-8') as f2:
             correct_result = json.load(f)
@@ -108,9 +107,8 @@ def test_dummmy_commit_mDir():
         def __init__(self, dir):
             self.directory = None
             self.multiple_directories = dir
-    args = dummyArgs('./tests/git-log-parser')
+    args = dummyArgs('./testRepo/git-log-parser')
     parser.get_log(args)
-    subprocess.run('ls')
     with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
         with open('logdata_.git.json', 'r', encoding='utf-8') as f2:
             correct_result = json.load(f)
