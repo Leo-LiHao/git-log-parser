@@ -22,13 +22,27 @@ def parse_datetime(date_string):
     except ValueError:
         return date_string
 
+def mine_directory(dir):
+    #saves the home directory
+    base_dir = os.getcwd()
+
+    #preps the input to be of correct format
+    if dir[0] == '.' and dir[1] !='.':
+        dir.replace('.', base_dir, 1)
+    elif dir[0] =='.' and dir[1] =='.':
+        dir = base_dir + '/' +dir
+    #opens the target dir, mines it then returns the result
+    os.chdir(dir)
+    gitLogResult = subprocess.getoutput('git log')
+    os.chdir(base_dir)
+
+    return gitLogResult
 
 def get_log(args):
     # attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
     if args.directory:
         try:
-            gitLogResult = subprocess.run(['git', 'log'], capture_output=True, text=True, cwd=args.directory)
-            create_json(gitLogResult.stdout)
+            create_json(mine_directory(args.directory))
             return
         except Exception as ex:
             print('The specified directory could not be opened.')
@@ -41,9 +55,9 @@ def get_log(args):
                 # call the csv function for every subdirectory
                 for dir in walkResults[1]:
                     # no exception is handeled here, since only the previously extracted directories are being opened
-                    gitLogResult = subprocess.run(['git', 'log'], capture_output=True, text=True,
-                                                  cwd=args.multiple_directories + '/' + dir)
-                    create_json(gitLogResult.stdout, dir)
+                    # hidden directories are ignored
+                    if dir[0] != '.':
+                        create_json(mine_directory(args.multiple_directories + '/' + dir), dir)
                 return
 
         except Exception as ex:
@@ -59,14 +73,14 @@ def create_json(git_log_result, attempted_directory=None):
     except models.UnexpectedLineError as ex:
         print(ex)
     # print commits
-    print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) + '  ' + 'Hash'.ljust(
+    """print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) + '  ' + 'Hash'.ljust(
         8) + '  ' + 'Message'.ljust(20))
     print("=================================================================================")
     for commit in logParser.commits:
         if commit.message is None:
             commit.message = 'No message provided'
         print(str(commit.commit_date) + '  ' + commit.author.name.ljust(15) + '  ' + commit.author.email.ljust(
-            20) + '  ' + commit.commit_hash[:7].ljust(8) + '  ' + commit.message)
+            20) + '  ' + commit.commit_hash[:7].ljust(8) + '  ' + commit.message)"""
     # specify which directory has been mined, only if there were multiple options
     if logParser.commits:
         with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w',
