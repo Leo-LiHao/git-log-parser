@@ -33,10 +33,10 @@ def mine_directory(dir):
         dir = base_dir + '/' +dir
     #opens the target dir, mines it then returns the result
     os.chdir(dir)
-    gitLogResult = subprocess.getoutput('git log')
+    git_log_result = subprocess.getoutput('git log')
     os.chdir(base_dir)
 
-    return gitLogResult
+    return git_log_result
 
 def get_log(args):
     # attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
@@ -71,7 +71,13 @@ def create_json(git_log_result, attempted_directory=None):
     try:
         logParser.parse_lines(git_log_result)
     except models.UnexpectedLineError as ex:
-        print(ex)
+        if 'fatal: not a git repository' in str(ex):
+            if attempted_directory:
+                print(attempted_directory + ' is not a git repository, no json file will be created for it!')
+            else:
+                print('The directory given is not a git repository, no json file will be created!')
+        else:
+            print(ex)
     # print commits
     """print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) + '  ' + 'Hash'.ljust(
         8) + '  ' + 'Message'.ljust(20))
