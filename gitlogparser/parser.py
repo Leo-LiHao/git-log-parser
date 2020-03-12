@@ -97,6 +97,9 @@ class GitLogParser(object):
 
     def __init__(self):
         self.commits = []
+        self.files_changed_pattern = re.compile(' (\\d+) files* changed')
+        self.insertion_pattern = re.compile('\\s(\\d+) insertions*')
+        self.deletion_pattern = re.compile('\\s(\\d+) deletions*')
 
     def parse_commit_hash(self, nextLine, commit):
         # commit xxxx
@@ -131,6 +134,18 @@ class GitLogParser(object):
         commit.change_id = re.compile(r'    Change-Id:\s*(.*)').match(
                 nextLine).group(1)
 
+    def parse_changed_files(self, nextLine, commit):
+        m = self.files_changed_pattern.search(nextLine)
+        commit.files_changed = m.group(1)
+
+    def parse_insertions(self, nextLine, commit):
+        m = self.insertion_pattern.search(nextLine)
+        commit.insertions = m.group(1)
+
+    def parse_deletions(self, nextLine, commit):
+        m = self.deletion_pattern.search(nextLine)
+        commit.deletions = m.group(1)
+
     def parse_lines(self, raw_lines, commit = None):
         if commit is None:
             commit = models.CommitData()
@@ -159,10 +174,19 @@ class GitLogParser(object):
 
             elif bool(re.match('    change-id: ', nextLine, re.IGNORECASE)):
                 self.parse_change_id(nextLine, commit)
+            
+            elif self.files_changed_pattern.search(nextLine):
+                self.parse_changed_files(nextLine, commit)
 
+            elif self.insertion_pattern.search(nextLine):
+                self.parse_deletions(nextLine, commit)
+
+            elif self.deletion_pattern.search(nextLine):
+                self.parse_deletions(nextLine, commit)
+            
             else:
                 raise models.UnexpectedLineError(nextLine)
-        
+            
         return commit
 
 # a new encoder is necessary to make the json dumb creation clean and readable

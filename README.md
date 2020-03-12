@@ -6,54 +6,87 @@ GitLogParser
 Python script to parse 'git log'
 
 ## Usage
-Script is intented to be used via commandline where you pipe 'git log' output to the script.  For example:
+Script is intented to be used via commandline. Depending on the commandine arguments it can either parse a single directory (-dir), or every repository within the given directory (-mDir).
+Each option needs either a full or relative route to the directory. 
 
-	> git log | gitLogParser.py
+	> gitlogparser -dir ./yourRepo
+	> gitlogparser -dir /home/something/somewhere/yourRepo
+	> gitlogparser -mDir /home/dirWithMultipleRepos
+	> gitlogparser -mdir ..
+
+From the mined data a json file will be created. If only a single directory was mined the json's name will be logdata_new.json, but if -mDir was given, each created file will be named after the mined repository in the following manner: logdata_*YourMinedRepo*.json
+
+The console will only display errors. In the case of a succesfull execution the files will be created in the same directory where the gitlogparser command was issued.
 
 ## Example
 ### git log output:
+	...
+	commit 9f6debef550a3a30e5c6b422115f869733bc9431
+	Author: Mosolygó <mosolygo.iskolai@gmail.com>
+	Date:   Fri Feb 28 15:56:59 2020 +0100
 
-	commit 80eab6766c4718cb27d4f6aa40bf71e79ba3ebcc
-	Author: John Chiu <jchiu@paypal.com>
-	Date:   Sun Oct 13 17:59:43 2013 -0700
+		Added the ability to choose repo directory
+		
+		argParser in a temporary place
+		
+		GitLogParser class slightly modified, so it can correctly read the new input
 
-	    Upgraded to 4.X and added Fragments
+	commit bfffe073ed7d98ae4be7e15968d16fa85e1ead62
+	Author: Gábor Antal <antal@inf.u-szeged.hu>
+	Date:   Tue Sep 3 17:07:34 2019 +0200
 
-	commit 30ce75f436a0b8a493e022c20e4c3d7138126030
-	Author: johnkchiu <johnkchiu@yahoo.com>
-	Date:   Sun Oct 13 17:00:24 2013 +0000
+		Reimplemented gitLogParse.py
+		
+		In this commit, classes are introduced in order to ease parsing
+		git commits. Corresponding objects created after parsing the log file.
+		These objects are then rewritten into a usable, automatizable structure.
 
-	    Created new branch dev
+	commit eee66b0b623c2dc3a99485a6d7428ad032a0bc5a
+	Author: Keleti Márton <tejes@hac.hu>
+	Date:   Wed Nov 15 16:10:32 2017 +0100
 
-	commit 2677b9d6d8b100d85fbd6da1b4a4187a21b676ab
-	Author: John Chiu <jchiu@paypal.com>
-	Date:   Tue Oct 16 20:33:33 2012 -0700
-
-	    - Rewrote song properties
-	    - Added Android Support Library
-	    - Clean up some code
-
-	commit 55b61986d82842f20788310cf7ffe4a02ca49437
-	Author: Chiu <jchiu@LM-SJN-00713306.(none)>
-	Date:   Thu Apr 5 23:43:30 2012 -0700
-
-	    Added back Eclipse files
+		Added newline to file endings
 	...
 
-### script output:
-
-
-	[jchiu@laptop]$ git log | ~/bin/gitLogParser.py
-	Author           Email                 Hash      Message
-	=================================================================================
-	John Chiu        jchiu@paypal.com      80eab67   Upgraded to 4.X and added Fragments
-	johnkchiu        johnkchiu@yahoo.com   30ce75f   Created new branch dev
-	John Chiu        jchiu@paypal.com      2677b9d   - Rewrote song properties
-	Chiu             jchiu@LM-SJN-0071330  55b6198   Added back Eclipse files
-	Chiu             jchiu@LM-SJN-0071330  1af4d7d   Added songs.properties file and data models
-	Chiu             jchiu@LM-SJN-0071330  884293f   Merge branch 'master' of https://bitbucket.org/... 
-	Chiu             jchiu@LM-SJN-0071330  006b306   Added splash screen and refactor filenames
-	Chiu             jchiu@LM-SJN-0071330  7b9ce47   Added splash screen and refactor filenames
-	Chiu             jchiu@LM-SJN-0071330  5885eb7   Working MediaService, SongList and SongView
-	Chiu             jchiu@LM-SJN-0071330  c6f4003   Remove bin and gen directories
-	
+### json's content:
+	...
+    {
+        "author": {
+            "email": "mosolygo.iskolai@gmail.com",
+            "name": "Mosolygó"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 15:56:59+01:00",
+        "commit_hash": "9f6debef550a3a30e5c6b422115f869733bc9431",
+        "deletions": null,
+        "files_changed": null,
+        "insertions": null,
+        "message": "Added the ability to choose repo directory\nargParser in a temporary place\nGitLogParser class slightly modified, so it can correctly read the new input"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gábor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2019-09-03 17:07:34+02:00",
+        "commit_hash": "bfffe073ed7d98ae4be7e15968d16fa85e1ead62",
+        "deletions": null,
+        "files_changed": null,
+        "insertions": null,
+        "message": "Reimplemented gitLogParse.py\nIn this commit, classes are introduced in order to ease parsing\ngit commits. Corresponding objects created after parsing the log file.\nThese objects are then rewritten into a usable, automatizable structure."
+    },
+    {
+        "author": {
+            "email": "tejes@hac.hu",
+            "name": "Keleti Márton"
+        },
+        "change_id": null,
+        "commit_date": "2017-11-15 16:10:32+01:00",
+        "commit_hash": "eee66b0b623c2dc3a99485a6d7428ad032a0bc5a",
+        "deletions": null,
+        "files_changed": null,
+        "insertions": null,
+        "message": "Added newline to file endings"
+    },
+	...

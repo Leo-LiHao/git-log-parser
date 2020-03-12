@@ -27,13 +27,16 @@ class CommitData(object):
     """Simple class to store Git commit data."""
 
     def __init__(self, commit_hash=None, author=Author(), message=None,
-                 date=None, change_id=None):
+                 date=None, change_id=None, files_changed=None, insertions=None, deletions = None):
         self.commit_hash = commit_hash
         self.author = author
         self.message = message
         self.commit_date = date
         # change id
         self.change_id = change_id
+        self.files_changed = files_changed
+        self.insertions = insertions
+        self.deletions = deletions
 
     # creates a dictionary that represents the class, since the author is a multivalue field, is has to be converted separately
     def to_json(self):
@@ -43,11 +46,15 @@ class CommitData(object):
             'message' : self.message,
             'commit_date' : str(self.commit_date),
             'change_id' : self.change_id,
+            'files_changed' : self.files_changed,
+            'insertions' : self.insertions,
+            'deletions' : self.deletions,
         }
 
     def __str__(self):
-        return "%s;%s;%s;%s;%s" % (self.commit_hash, self.author, self.message,
-                                   str(self.commit_date), self.change_id)
+        return "%s;%s;%s;%s;%s;%s;%s;%s" % (self.commit_hash, self.author, self.message,
+                                   str(self.commit_date), self.change_id,
+                                   self.files_changed, self.insertions, self.deletions)
     
 
     def __eq__(self, other):
@@ -56,4 +63,7 @@ class CommitData(object):
                 and self.author == other.author 
                 and self.message == other.message 
                 and str(self.commit_date) == str(other.commit_date) 
-                and self.change_id == other.change_id)
+                and self.change_id == other.change_id
+                and self.files_changed == other.files_changed
+                and self.insertions == other.insertions
+                and self.deletions == other.deletions)
