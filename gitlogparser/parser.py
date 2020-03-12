@@ -21,8 +21,8 @@ def parse_datetime(date_string):
         return datetime.datetime.strptime(date_string, FORMAT_STRING)
     except ValueError:
         return date_string
-
-def mine_directory(dir):
+#both types of directory mining happens here, the bool variable decides which will be choosen
+def mine_directory(dir, logs=True, before_commit=None, after_commit=None):
     #saves the home directory
     base_dir = os.getcwd()
 
@@ -33,16 +33,24 @@ def mine_directory(dir):
         dir = base_dir + '/' +dir
     #opens the target dir, mines it then returns the result
     os.chdir(dir)
-    git_log_result = subprocess.getoutput('git log')
+    #if logs is true, git logs are extracted
+    if(logs):
+        git_result = subprocess.getoutput('git log')
+    #if logs is false, and both hashes are provided the statistical difference mining will begin
+    elif(before_commit and after_commit):
+        git_result = subprocess.getoutput('git diff ' + before_commit + ' ' + after_commit + ' --shortstat')
+    #if the above requirements are not met, the function has been called improperly, and an exception is raised
+    else:
+        raise RuntimeError('Function: "mine_directory" has been improperly called')
     os.chdir(base_dir)
 
-    return git_log_result
+    return git_result
 
 def get_log(args):
     # attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
     if args.directory:
         try:
-            create_json(mine_directory(args.directory))
+            create_json(mine_directory(args.directory), args.directory)
             return
         except Exception as ex:
             print('The specified directory could not be opened.')
@@ -57,7 +65,7 @@ def get_log(args):
                     # no exception is handeled here, since only the previously extracted directories are being opened
                     # hidden directories are ignored
                     if dir[0] != '.':
-                        create_json(mine_directory(args.multiple_directories + '/' + dir), dir)
+                        create_json(mine_directory(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, dir)
                 return
 
         except Exception as ex:
@@ -66,10 +74,12 @@ def get_log(args):
 
 
 # process the mined data and store it in JSON
-def create_json(git_log_result, attempted_directory=None):
+def create_json(git_log_result, current_path, attempted_directory=None):
     logParser = GitLogParser()
     try:
         logParser.parse_lines(git_log_result)
+        #the update data extraction is a separate function, since it assumes that every commit has aleady been mined
+        logParser.get_update_data(current_path)
     except models.UnexpectedLineError as ex:
         if 'fatal: not a git repository' in str(ex):
             if attempted_directory:
@@ -97,10 +107,30 @@ class GitLogParser(object):
 
     def __init__(self):
         self.commits = []
-        self.files_changed_pattern = re.compile(' (\\d+) files* changed')
-        self.insertion_pattern = re.compile('\\s(\\d+) insertions*')
-        self.deletion_pattern = re.compile('\\s(\\d+) deletions*')
 
+    def get_update_data(self, location):
+        #since we append the commits to a list, their order is reversed, so we have to start from the end of the list
+        for i in range(len(self.commits)-2, -1, -1):
+            stat_dict = dict()
+            stats = mine_directory(location, False, self.commits[i+1].commit_hash, self.commits[i].commit_hash).split()
+            #since all 3 stats can be 0 n which case they are not displayed, this loop creates a dict based on the existing ones
+            for j in range(1, len(stats)):
+                if stats[j-1].isdigit():
+                    stat_dict[stats[j]] = int(stats[j-1])
+
+            #if a part of a statistic is missing the keys vary, but they always start the same way
+            for key in stat_dict:
+                if key.startswith('file'):
+                    self.commits[i].files_changed = stat_dict[key]
+                
+                if key.startswith('insertion'):
+                    self.commits[i].insertions = stat_dict[key]
+
+                if key.startswith('deletion'):
+                    self.commits[i].deletions = stat_dict[key]
+
+
+            
     def parse_commit_hash(self, nextLine, commit):
         # commit xxxx
         if commit.commit_hash is not None:
@@ -134,18 +164,6 @@ class GitLogParser(object):
         commit.change_id = re.compile(r'    Change-Id:\s*(.*)').match(
                 nextLine).group(1)
 
-    def parse_changed_files(self, nextLine, commit):
-        m = self.files_changed_pattern.search(nextLine)
-        commit.files_changed = m.group(1)
-
-    def parse_insertions(self, nextLine, commit):
-        m = self.insertion_pattern.search(nextLine)
-        commit.insertions = m.group(1)
-
-    def parse_deletions(self, nextLine, commit):
-        m = self.deletion_pattern.search(nextLine)
-        commit.deletions = m.group(1)
-
     def parse_lines(self, raw_lines, commit = None):
         if commit is None:
             commit = models.CommitData()
@@ -175,17 +193,13 @@ class GitLogParser(object):
             elif bool(re.match('    change-id: ', nextLine, re.IGNORECASE)):
                 self.parse_change_id(nextLine, commit)
             
-            elif self.files_changed_pattern.search(nextLine):
-                self.parse_changed_files(nextLine, commit)
-
-            elif self.insertion_pattern.search(nextLine):
-                self.parse_deletions(nextLine, commit)
-
-            elif self.deletion_pattern.search(nextLine):
-                self.parse_deletions(nextLine, commit)
-            
             else:
                 raise models.UnexpectedLineError(nextLine)
+            
+        if len(self.commits) != 0:
+            self.commits.append(commit)
+
+
             
         return commit
 

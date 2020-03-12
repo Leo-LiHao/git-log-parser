@@ -27,7 +27,7 @@ class CommitData(object):
     """Simple class to store Git commit data."""
 
     def __init__(self, commit_hash=None, author=Author(), message=None,
-                 date=None, change_id=None, files_changed=None, insertions=None, deletions = None):
+                 date=None, change_id=None, files_changed=0, insertions=0, deletions = 0):
         self.commit_hash = commit_hash
         self.author = author
         self.message = message

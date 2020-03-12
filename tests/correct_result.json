@@ -7,9 +7,9 @@
         "change_id": null,
         "commit_date": "2020-02-29 16:39:45+01:00",
         "commit_hash": "86e684ddfb16f98f09211bb8087b6d321b25c145",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 5,
+        "files_changed": 1,
+        "insertions": 12,
         "message": "Merge branch 'master' of https://github.com/gaborantal/git-log-parser"
     },
     {
@@ -20,9 +20,9 @@
         "change_id": null,
         "commit_date": "2020-02-29 16:39:03+01:00",
         "commit_hash": "fb781b5ae228d2e7513d0e7677e462b2234b323c",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 23,
+        "files_changed": 3,
+        "insertions": 40,
         "message": "The mined data is now represented in json"
     },
     {
@@ -33,9 +33,9 @@
         "change_id": null,
         "commit_date": "2020-02-29 10:54:42+01:00",
         "commit_hash": "0bca61696b750e49dfa42f3c53f1fede92d6b890",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 5,
+        "files_changed": 1,
+        "insertions": 12,
         "message": "Test enhancement"
     },
     {
@@ -46,9 +46,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 23:38:36+01:00",
         "commit_hash": "bf55c80997f5111cf78b21e5d875e1e1b9d285ab",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 2,
+        "files_changed": 3,
+        "insertions": 11,
         "message": "Updated travis.yml"
     },
     {
@@ -59,9 +59,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 23:21:22+01:00",
         "commit_hash": "0ca1dfc18226007d130e8720b9792d36684dd036",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 63,
+        "files_changed": 7,
+        "insertions": 98,
         "message": "Made project structure"
     },
     {
@@ -72,9 +72,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 22:38:40+01:00",
         "commit_hash": "b30d83d59b389c288e11a5e3b06d9b254271fd31",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 25,
+        "files_changed": 1,
+        "insertions": 9,
         "message": "Reset travis to use Linux"
     },
     {
@@ -85,9 +85,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 21:49:20+01:00",
         "commit_hash": "57fe0252b0e33c678c712cec72c9eb09cd060505",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 0,
+        "files_changed": 0,
+        "insertions": 0,
         "message": "Updated travis"
     },
     {
@@ -98,9 +98,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 22:13:34+01:00",
         "commit_hash": "52597cd95c8f9b32ab5494b62d4e243dcc200453",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 4,
+        "files_changed": 1,
+        "insertions": 2,
         "message": "Updated travis"
     },
     {
@@ -111,9 +111,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 22:10:28+01:00",
         "commit_hash": "96a8c4243ba824244bfeedef2dd9338fcf35f08f",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 1,
+        "files_changed": 1,
+        "insertions": 1,
         "message": "Updated travis"
     },
     {
@@ -124,9 +124,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 22:04:23+01:00",
         "commit_hash": "fb5827ae60133e9837f7af0afab16ea64b20cce4",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 1,
+        "files_changed": 1,
+        "insertions": 1,
         "message": "Updated travis"
     },
     {
@@ -137,9 +137,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 22:01:24+01:00",
         "commit_hash": "a88f72c7d2437e9cf16d0f076889419157e2c31b",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 23,
+        "files_changed": 1,
+        "insertions": 24,
         "message": "Updated travis"
     },
     {
@@ -150,9 +150,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 21:53:24+01:00",
         "commit_hash": "0a724301c8ef056bb3b28f3749de1ad9825a8ed1",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 8,
+        "files_changed": 1,
+        "insertions": 26,
         "message": "Updated travis"
     },
     {
@@ -163,9 +163,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 21:49:20+01:00",
         "commit_hash": "f4ddc6471b086a107ad07a91f1cfdd586b27b8b6",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 0,
+        "files_changed": 1,
+        "insertions": 3,
         "message": "Updated travis"
     },
     {
@@ -176,9 +176,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 17:58:37+01:00",
         "commit_hash": "e81d19d2cc8a2484edd983f40872b3a7ae1d9f04",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 28,
+        "files_changed": 1,
+        "insertions": 47,
         "message": "Added the mDir argument so multiple repos can be processed at once\nMoved the output generation to separate function"
     },
     {
@@ -189,9 +189,9 @@
         "change_id": null,
         "commit_date": "2020-02-28 15:56:59+01:00",
         "commit_hash": "9f6debef550a3a30e5c6b422115f869733bc9431",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 18,
+        "files_changed": 1,
+        "insertions": 34,
         "message": "Added the ability to choose repo directory\nargParser in a temporary place\nGitLogParser class slightly modified, so it can correctly read the new input"
     },
     {
@@ -202,9 +202,9 @@
         "change_id": null,
         "commit_date": "2019-09-03 17:07:34+02:00",
         "commit_hash": "bfffe073ed7d98ae4be7e15968d16fa85e1ead62",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 40,
+        "files_changed": 1,
+        "insertions": 116,
         "message": "Reimplemented gitLogParse.py\nIn this commit, classes are introduced in order to ease parsing\ngit commits. Corresponding objects created after parsing the log file.\nThese objects are then rewritten into a usable, automatizable structure."
     },
     {
@@ -215,9 +215,9 @@
         "change_id": null,
         "commit_date": "2017-11-15 16:10:32+01:00",
         "commit_hash": "eee66b0b623c2dc3a99485a6d7428ad032a0bc5a",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 2,
+        "files_changed": 2,
+        "insertions": 3,
         "message": "Added newline to file endings"
     },
     {
@@ -228,9 +228,9 @@
         "change_id": null,
         "commit_date": "2017-11-14 21:55:20+01:00",
         "commit_hash": "3d2dd7617d4f74a1c1d5f6a0053d530fc513fb8a",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 0,
+        "files_changed": 1,
+        "insertions": 2,
         "message": "Added travis support"
     },
     {
@@ -241,9 +241,9 @@
         "change_id": null,
         "commit_date": "2017-11-14 21:43:35+01:00",
         "commit_hash": "655b7d1961bd93f72e102ba6a067c43df30d8563",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 0,
+        "files_changed": 2,
+        "insertions": 8,
         "message": "Added travis support"
     },
     {
@@ -254,9 +254,22 @@
         "change_id": null,
         "commit_date": "2013-10-18 23:55:03-07:00",
         "commit_hash": "962398800d6d43c9e56f708235f6259a7526a95f",
-        "deletions": null,
-        "files_changed": null,
-        "insertions": null,
+        "deletions": 0,
+        "files_changed": 2,
+        "insertions": 100,
         "message": "Rough working version"
+    },
+    {
+        "author": {
+            "email": "johnkchiu@yahoo.com",
+            "name": "John Chiu"
+        },
+        "change_id": null,
+        "commit_date": "2013-10-18 23:45:39-07:00",
+        "commit_hash": "86345b932949ffa466e41f763414da41cd8f6563",
+        "deletions": 0,
+        "files_changed": 0,
+        "insertions": 0,
+        "message": "Initial commit"
     }
 ]
