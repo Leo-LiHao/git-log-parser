@@ -10,6 +10,7 @@
         "deletions": 5,
         "files_changed": 1,
         "insertions": 12,
+        "isMerge": true,
         "message": "Merge branch 'master' of https://github.com/gaborantal/git-log-parser"
     },
     {
@@ -23,6 +24,7 @@
         "deletions": 23,
         "files_changed": 3,
         "insertions": 40,
+        "isMerge": false,
         "message": "The mined data is now represented in json"
     },
     {
@@ -36,6 +38,7 @@
         "deletions": 5,
         "files_changed": 1,
         "insertions": 12,
+        "isMerge": false,
         "message": "Test enhancement"
     },
     {
@@ -49,6 +52,7 @@
         "deletions": 2,
         "files_changed": 3,
         "insertions": 11,
+        "isMerge": false,
         "message": "Updated travis.yml"
     },
     {
@@ -62,6 +66,7 @@
         "deletions": 63,
         "files_changed": 7,
         "insertions": 98,
+        "isMerge": false,
         "message": "Made project structure"
     },
     {
@@ -75,6 +80,7 @@
         "deletions": 25,
         "files_changed": 1,
         "insertions": 9,
+        "isMerge": false,
         "message": "Reset travis to use Linux"
     },
     {
@@ -88,6 +94,7 @@
         "deletions": 0,
         "files_changed": 0,
         "insertions": 0,
+        "isMerge": false,
         "message": "Updated travis"
     },
     {
@@ -101,6 +108,7 @@
         "deletions": 4,
         "files_changed": 1,
         "insertions": 2,
+        "isMerge": false,
         "message": "Updated travis"
     },
     {
@@ -114,6 +122,7 @@
         "deletions": 1,
         "files_changed": 1,
         "insertions": 1,
+        "isMerge": false,
         "message": "Updated travis"
     },
     {
@@ -127,6 +136,7 @@
         "deletions": 1,
         "files_changed": 1,
         "insertions": 1,
+        "isMerge": false,
         "message": "Updated travis"
     },
     {
@@ -140,6 +150,7 @@
         "deletions": 23,
         "files_changed": 1,
         "insertions": 24,
+        "isMerge": false,
         "message": "Updated travis"
     },
     {
@@ -153,6 +164,7 @@
         "deletions": 8,
         "files_changed": 1,
         "insertions": 26,
+        "isMerge": false,
         "message": "Updated travis"
     },
     {
@@ -166,6 +178,7 @@
         "deletions": 0,
         "files_changed": 1,
         "insertions": 3,
+        "isMerge": false,
         "message": "Updated travis"
     },
     {
@@ -179,6 +192,7 @@
         "deletions": 28,
         "files_changed": 1,
         "insertions": 47,
+        "isMerge": false,
         "message": "Added the mDir argument so multiple repos can be processed at once\nMoved the output generation to separate function"
     },
     {
@@ -192,6 +206,7 @@
         "deletions": 18,
         "files_changed": 1,
         "insertions": 34,
+        "isMerge": false,
         "message": "Added the ability to choose repo directory\nargParser in a temporary place\nGitLogParser class slightly modified, so it can correctly read the new input"
     },
     {
@@ -205,6 +220,7 @@
         "deletions": 40,
         "files_changed": 1,
         "insertions": 116,
+        "isMerge": false,
         "message": "Reimplemented gitLogParse.py\nIn this commit, classes are introduced in order to ease parsing\ngit commits. Corresponding objects created after parsing the log file.\nThese objects are then rewritten into a usable, automatizable structure."
     },
     {
@@ -218,6 +234,7 @@
         "deletions": 2,
         "files_changed": 2,
         "insertions": 3,
+        "isMerge": false,
         "message": "Added newline to file endings"
     },
     {
@@ -231,6 +248,7 @@
         "deletions": 0,
         "files_changed": 1,
         "insertions": 2,
+        "isMerge": false,
         "message": "Added travis support"
     },
     {
@@ -244,6 +262,7 @@
         "deletions": 0,
         "files_changed": 2,
         "insertions": 8,
+        "isMerge": false,
         "message": "Added travis support"
     },
     {
@@ -257,6 +276,7 @@
         "deletions": 0,
         "files_changed": 2,
         "insertions": 100,
+        "isMerge": false,
         "message": "Rough working version"
     },
     {
@@ -270,6 +290,7 @@
         "deletions": 0,
         "files_changed": 0,
         "insertions": 0,
+        "isMerge": false,
         "message": "Initial commit"
     }
 ]

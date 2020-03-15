@@ -4,6 +4,7 @@ import re
 import subprocess
 import os
 import json
+import concurrent.futures
 
 from . import models
 
@@ -22,7 +23,7 @@ def parse_datetime(date_string):
     except ValueError:
         return date_string
 #both types of directory mining happens here, the bool variable decides which will be choosen
-def mine_directory(dir, logs=True, before_commit=None, after_commit=None):
+def mine_logs(dir):
     #saves the home directory
     base_dir = os.getcwd()
 
@@ -33,26 +34,24 @@ def mine_directory(dir, logs=True, before_commit=None, after_commit=None):
         dir = base_dir + '/' +dir
     #opens the target dir, mines it then returns the result
     os.chdir(dir)
-    #if logs is true, git logs are extracted
-    if(logs):
-        git_result = subprocess.getoutput('git log')
-    #if logs is false, and both hashes are provided the statistical difference mining will begin
-    elif(before_commit and after_commit):
-        git_result = subprocess.getoutput('git diff ' + before_commit + ' ' + after_commit + ' --shortstat')
-    #if the above requirements are not met, the function has been called improperly, and an exception is raised
-    else:
-        raise RuntimeError('Function: "mine_directory" has been improperly called')
+
+    git_result = subprocess.getoutput('git log')
+
     os.chdir(base_dir)
 
     return git_result
+
+def mine_stats(before_commit, after_commit):
+    return subprocess.getoutput('git diff ' + before_commit + ' ' + after_commit + ' --shortstat')
 
 def get_log(args):
     # attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
     if args.directory:
         try:
-            create_json(mine_directory(args.directory), args.directory)
+            create_json(mine_logs(args.directory), args.directory)
             return
         except Exception as ex:
+            print(ex)
             print('The specified directory could not be opened.')
             return
 
@@ -65,10 +64,11 @@ def get_log(args):
                     # no exception is handeled here, since only the previously extracted directories are being opened
                     # hidden directories are ignored
                     if dir[0] != '.':
-                        create_json(mine_directory(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, dir)
+                        create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, dir)
                 return
 
         except Exception as ex:
+            print(ex)
             print('The specified directory could not be opened.')
             return
 
@@ -99,9 +99,11 @@ def create_json(git_log_result, current_path, attempted_directory=None):
             20) + '  ' + commit.commit_hash[:7].ljust(8) + '  ' + commit.message)"""
     # specify which directory has been mined, only if there were multiple options
     if logParser.commits:
+        print('creating json ' + ('for ' + attempted_directory if attempted_directory else '' ))
         with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w',
             encoding='utf-8') as f:
             json.dump(logParser, f, indent=4, cls=CommitEncoder, sort_keys=True)
+            
 
 class GitLogParser(object):
 
@@ -109,26 +111,48 @@ class GitLogParser(object):
         self.commits = []
 
     def get_update_data(self, location):
-        #since we append the commits to a list, their order is reversed, so we have to start from the end of the list
-        for i in range(len(self.commits)-2, -1, -1):
-            stat_dict = dict()
-            stats = mine_directory(location, False, self.commits[i+1].commit_hash, self.commits[i].commit_hash).split()
-            #since all 3 stats can be 0 n which case they are not displayed, this loop creates a dict based on the existing ones
-            for j in range(1, len(stats)):
-                if stats[j-1].isdigit():
-                    stat_dict[stats[j]] = int(stats[j-1])
+        
+        #saves the home directory
+        base_dir = os.getcwd()
 
-            #if a part of a statistic is missing the keys vary, but they always start the same way
-            for key in stat_dict:
-                if key.startswith('file'):
-                    self.commits[i].files_changed = stat_dict[key]
+        #preps the input to be of correct format
+        if location[0] == '.' and location[1] !='.':
+            location.replace('.', base_dir, 1)
+        elif location[0] =='.' and location[1] =='.':
+            location = base_dir + '/' +location
+        #opens the target dir, mines it then returns the result
+        os.chdir(location)
+        
+        
+        #get the stats on multple threads to increase performance
+        with concurrent.futures.ThreadPoolExecutor() as executor:
+            results = list()
+            for i in range(len(self.commits)-2, -1, -1):
+                results.append(executor.submit(mine_stats, self.commits[i+1].commit_hash, self.commits[i].commit_hash))
+        #wait for every stat    
+            concurrent.futures.wait(results)
+        #this is needed since the commits are in a different order then the results
+            current_commit = len(self.commits)-2
+            for r in results:
+                stat_dict = dict()
+                stats = r.result().split()
+                #since all 3 stats can be 0 n which case they are not displayed, this loop creates a dict based on the existing ones
+                for j in range(1, len(stats)):
+                    if stats[j-1].isdigit():
+                        stat_dict[stats[j]] = int(stats[j-1])
+                #if a part of a statistic is missing the keys vary, but they always start the same way
+                for key in stat_dict:
+                    if key.startswith('file'):
+                        self.commits[current_commit].files_changed = stat_dict[key]
                 
-                if key.startswith('insertion'):
-                    self.commits[i].insertions = stat_dict[key]
+                    if key.startswith('insertion'):
+                        self.commits[current_commit].insertions = stat_dict[key]
 
-                if key.startswith('deletion'):
-                    self.commits[i].deletions = stat_dict[key]
+                    if key.startswith('deletion'):
+                        self.commits[current_commit].deletions = stat_dict[key]
+                current_commit = current_commit - 1
 
+        os.chdir(base_dir)
 
             
     def parse_commit_hash(self, nextLine, commit):
@@ -159,6 +183,9 @@ class GitLogParser(object):
             commit.message = nextLine.strip()
         else:
             commit.message = commit.message + os.linesep + nextLine.strip()
+        
+        if 'merge' in commit.message or 'Merge' in commit.message:
+            commit.isMerge = True
 
     def parse_change_id(self, nextLine, commit):
         commit.change_id = re.compile(r'    Change-Id:\s*(.*)').match(
