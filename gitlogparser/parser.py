@@ -22,6 +22,7 @@ def parse_datetime(date_string):
         return datetime.datetime.strptime(date_string, FORMAT_STRING)
     except ValueError:
         return date_string
+# gitlogparser -dir C:\Users\Hex\source\repos\cve-miner\repos\core
 #both types of directory mining happens here, the bool variable decides which will be choosen
 def mine_logs(dir):
     #saves the home directory
@@ -34,9 +35,7 @@ def mine_logs(dir):
         dir = base_dir + '/' +dir
     #opens the target dir, mines it then returns the result
     os.chdir(dir)
-
-    git_result = subprocess.getoutput('git log')
-
+    git_result = subprocess.check_output('git log').decode("utf-8")
     os.chdir(base_dir)
 
     return git_result
@@ -88,22 +87,11 @@ def create_json(git_log_result, current_path, attempted_directory=None):
                 print('The directory given is not a git repository, no json file will be created!')
         else:
             print(ex)
-    # print commits
-    """print('Date'.ljust(14) + ' ' + 'Author'.ljust(15) + '  ' + 'Email'.ljust(20) + '  ' + 'Hash'.ljust(
-        8) + '  ' + 'Message'.ljust(20))
-    print("=================================================================================")
-    for commit in logParser.commits:
-        if commit.message is None:
-            commit.message = 'No message provided'
-        print(str(commit.commit_date) + '  ' + commit.author.name.ljust(15) + '  ' + commit.author.email.ljust(
-            20) + '  ' + commit.commit_hash[:7].ljust(8) + '  ' + commit.message)"""
     # specify which directory has been mined, only if there were multiple options
     if logParser.commits:
         print('creating json ' + ('for ' + attempted_directory if attempted_directory else '' ))
-        with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w',
-            encoding='utf-8') as f:
+        with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w', encoding='utf-8') as f:
             json.dump(logParser, f, indent=4, cls=CommitEncoder, sort_keys=True)
-            
 
 class GitLogParser(object):
 
@@ -111,7 +99,7 @@ class GitLogParser(object):
         self.commits = []
 
     def get_update_data(self, location):
-        
+
         #saves the home directory
         base_dir = os.getcwd()
 
@@ -122,14 +110,14 @@ class GitLogParser(object):
             location = base_dir + '/' +location
         #opens the target dir, mines it then returns the result
         os.chdir(location)
-        
-        
+
+
         #get the stats on multple threads to increase performance
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = list()
             for i in range(len(self.commits)-2, -1, -1):
                 results.append(executor.submit(mine_stats, self.commits[i+1].commit_hash, self.commits[i].commit_hash))
-        #wait for every stat    
+        #wait for every stat
             concurrent.futures.wait(results)
         #this is needed since the commits are in a different order then the results
             current_commit = len(self.commits)-2
@@ -144,7 +132,7 @@ class GitLogParser(object):
                 for key in stat_dict:
                     if key.startswith('file'):
                         self.commits[current_commit].files_changed = stat_dict[key]
-                
+
                     if key.startswith('insertion'):
                         self.commits[current_commit].insertions = stat_dict[key]
 
@@ -154,7 +142,7 @@ class GitLogParser(object):
 
         os.chdir(base_dir)
 
-            
+
     def parse_commit_hash(self, nextLine, commit):
         # commit xxxx
         if commit.commit_hash is not None:
@@ -165,7 +153,7 @@ class GitLogParser(object):
                                       nextLine, re.IGNORECASE).group(1)
 
         return commit
-                
+
 
     def parse_author(self, nextLine):
         # Author: xxxx <xxxx@xxxx.com>
@@ -183,7 +171,7 @@ class GitLogParser(object):
             commit.message = nextLine.strip()
         else:
             commit.message = commit.message + os.linesep + nextLine.strip()
-        
+
         if 'merge' in commit.message or 'Merge' in commit.message:
             commit.isMerge = True
 
@@ -219,15 +207,15 @@ class GitLogParser(object):
 
             elif bool(re.match('    change-id: ', nextLine, re.IGNORECASE)):
                 self.parse_change_id(nextLine, commit)
-            
+
             else:
                 raise models.UnexpectedLineError(nextLine)
-            
+
         if len(self.commits) != 0:
             self.commits.append(commit)
 
 
-            
+
         return commit
 
 # a new encoder is necessary to make the json dumb creation clean and readable
