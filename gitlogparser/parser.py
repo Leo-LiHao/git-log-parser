@@ -35,7 +35,7 @@ def mine_logs(dir):
         dir = base_dir + '/' +dir
     #opens the target dir, mines it then returns the result
     os.chdir(dir)
-    git_result = subprocess.check_output('git log').decode("utf-8")
+    git_result = subprocess.check_output(['git', 'log']).decode("utf-8")
     os.chdir(base_dir)
 
     return git_result
