@@ -100,7 +100,7 @@ def test_dummy_commit_singleDir():
     args = dummyArgs('./tests/git-log-parser')
     parser.get_log(args)
     with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
-        with open('logdata_new.json', 'r', encoding='utf-8') as f2:
+        with open('./logdata_new.json', 'r', encoding='utf-8') as f2:
             correct_result = json.load(f)
             current_result = json.load(f2)
             assert correct_result == current_result
@@ -112,8 +112,9 @@ def test_dummmy_commit_mDir():
             self.multiple_directories = dir
     args = dummyArgs('./tests')
     parser.get_log(args)
+    print(subprocess.run('ls'))
     with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
-        with open('logdata_git-log-parser.json', 'r', encoding='utf-8') as f2:
+        with open('./logdata_git-log-parser.json', 'r', encoding='utf-8') as f2:
             correct_result = json.load(f)
             current_result = json.load(f2)
             assert correct_result == current_result
