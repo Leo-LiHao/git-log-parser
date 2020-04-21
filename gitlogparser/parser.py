@@ -35,7 +35,7 @@ def mine_logs(dir):
         dir = base_dir + '/' +dir
     #opens the target dir, mines it then returns the result
     os.chdir(dir)
-    git_result = subprocess.check_output(['git', 'log']).decode("utf-8")
+    git_result = subprocess.check_output(['git', 'log']).decode("utf8", 'ignore')
     os.chdir(base_dir)
 
     return git_result
@@ -63,7 +63,8 @@ def get_log(args):
                     # no exception is handeled here, since only the previously extracted directories are being opened
                     # hidden directories are ignored
                     if dir[0] != '.':
-                        create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, dir)
+                        # an extra return is added to make the parser clucky when used as a lib
+                        return create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, dir)
                 return
 
         except Exception as ex:
@@ -92,6 +93,8 @@ def create_json(git_log_result, current_path, attempted_directory=None):
         print('creating json ' + ('for ' + attempted_directory if attempted_directory else '' ))
         with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w', encoding='utf-8') as f:
             json.dump(logParser, f, indent=4, cls=CommitEncoder, sort_keys=True)
+    
+    return logParser.commits
 
 class GitLogParser(object):
 
@@ -99,7 +102,6 @@ class GitLogParser(object):
         self.commits = []
 
     def get_update_data(self, location):
-
         #saves the home directory
         base_dir = os.getcwd()
 
@@ -207,9 +209,8 @@ class GitLogParser(object):
 
             elif bool(re.match('    change-id: ', nextLine, re.IGNORECASE)):
                 self.parse_change_id(nextLine, commit)
-
             else:
-                raise models.UnexpectedLineError(nextLine)
+                print(models.UnexpectedLineError(nextLine))
 
         if len(self.commits) != 0:
             self.commits.append(commit)
