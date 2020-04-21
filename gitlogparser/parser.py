@@ -64,7 +64,7 @@ def get_log(args):
                     # hidden directories are ignored
                     if dir[0] != '.':
                         # an extra return is added to make the parser clucky when used as a lib
-                        return create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, dir)
+                        create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, dir)
                 return
 
         except Exception as ex:
@@ -93,8 +93,6 @@ def create_json(git_log_result, current_path, attempted_directory=None):
         print('creating json ' + ('for ' + attempted_directory if attempted_directory else '' ))
         with open('logdata_' + (attempted_directory if attempted_directory else 'new' )+ '.json', 'w', encoding='utf-8') as f:
             json.dump(logParser, f, indent=4, cls=CommitEncoder, sort_keys=True)
-    
-    return logParser.commits
 
 class GitLogParser(object):
 
