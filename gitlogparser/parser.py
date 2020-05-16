@@ -117,14 +117,16 @@ class GitLogParser(object):
             results = list()
             for i in range(len(self.commits)-2, -1, -1):
                 results.append(executor.submit(mine_stats, self.commits[i+1].commit_hash, self.commits[i].commit_hash))
-        #wait for every stat
-            concurrent.futures.wait(results)
+        
         #this is needed since the commits are in a different order then the results
             current_commit = len(self.commits)-2
+        
+            #concurrent.futures.wait(results)
             for r in results:
                 stat_dict = dict()
+                # since the result method stop the code until the thread finishes, we don't have to wait for the results to come in anywhere else
                 stats = r.result().split()
-                #since all 3 stats can be 0 n which case they are not displayed, this loop creates a dict based on the existing ones
+                # since all 3 stats can be 0 in which case they are not displayed, this loop is needed to create a dict based on the existing ones
                 for j in range(1, len(stats)):
                     if stats[j-1].isdigit():
                         stat_dict[stats[j]] = int(stats[j-1])
