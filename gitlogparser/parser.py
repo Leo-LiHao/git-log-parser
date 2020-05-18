@@ -40,8 +40,15 @@ def mine_logs(dir):
 
     return git_result
 
-def mine_stats(before_commit, after_commit):
-    return subprocess.getoutput('git diff ' + before_commit + ' ' + after_commit + ' --shortstat')
+def mine_stats(before_commit, after_commit, isMerge=False):
+    # git log --pretty=%P -1 commit
+    if isMerge:
+        asd = subprocess.getoutput('git diff ' + before_commit + ' ' + after_commit + ' --shortstat')
+        print('------------------------------ \n' + before_commit + '\n' + after_commit + '\n' + asd+ '\n')
+    else:
+        parent = subprocess.getoutput('git log --pretty=%P -1 ' + after_commit)
+        asd = subprocess.getoutput('git diff ' + parent + ' ' + after_commit + ' --shortstat')
+    return asd
 
 def get_log(args):
     # attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
@@ -99,6 +106,9 @@ class GitLogParser(object):
     def __init__(self):
         self.commits = []
 
+    def commit_sort(self, e):
+        return e.commit_date
+
     def get_update_data(self, location):
         #saves the home directory
         base_dir = os.getcwd()
@@ -111,14 +121,17 @@ class GitLogParser(object):
         #opens the target dir, mines it then returns the result
         os.chdir(location)
 
+        # the stored commit list has to be sorted
+        # self.commits.sort(key=self.commit_sort, reverse=True)
+
 
         #get the stats on multple threads to increase performance
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = list()
             for i in range(len(self.commits)-2, -1, -1):
-                results.append(executor.submit(mine_stats, self.commits[i+1].commit_hash, self.commits[i].commit_hash))
+                results.append(executor.submit(mine_stats, self.commits[i+1].commit_hash, self.commits[i].commit_hash, self.commits[i].isMerge))
         
-        #this is needed since the commits are in a different order then the results
+            #this is needed since the commits are in a different order then the results
             current_commit = len(self.commits)-2
         
             #concurrent.futures.wait(results)
@@ -133,6 +146,8 @@ class GitLogParser(object):
                 #if a part of a statistic is missing the keys vary, but they always start the same way
                 for key in stat_dict:
                     if key.startswith('file'):
+                        if(stat_dict[key] > 1000):
+                            print(self.commits[current_commit].commit_hash)
                         self.commits[current_commit].files_changed = stat_dict[key]
 
                     if key.startswith('insertion'):

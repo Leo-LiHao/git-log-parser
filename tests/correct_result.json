@@ -21,9 +21,9 @@
         "change_id": null,
         "commit_date": "2020-02-29 16:39:03+01:00",
         "commit_hash": "fb781b5ae228d2e7513d0e7677e462b2234b323c",
-        "deletions": 23,
-        "files_changed": 3,
-        "insertions": 40,
+        "deletions": 11,
+        "files_changed": 2,
+        "insertions": 35,
         "isMerge": false,
         "message": "The mined data is now represented in json"
     },
@@ -77,25 +77,11 @@
         "change_id": null,
         "commit_date": "2020-02-28 22:38:40+01:00",
         "commit_hash": "b30d83d59b389c288e11a5e3b06d9b254271fd31",
-        "deletions": 25,
-        "files_changed": 1,
-        "insertions": 9,
-        "isMerge": false,
-        "message": "Reset travis to use Linux"
-    },
-    {
-        "author": {
-            "email": "antal@inf.u-szeged.hu",
-            "name": "Gabor Antal"
-        },
-        "change_id": null,
-        "commit_date": "2020-02-28 21:49:20+01:00",
-        "commit_hash": "57fe0252b0e33c678c712cec72c9eb09cd060505",
         "deletions": 0,
         "files_changed": 0,
         "insertions": 0,
         "isMerge": false,
-        "message": "Updated travis"
+        "message": "Reset travis to use Linux"
     },
     {
         "author": {
@@ -164,6 +150,20 @@
         "deletions": 8,
         "files_changed": 1,
         "insertions": 26,
+        "isMerge": false,
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
+        "commit_date": "2020-02-28 21:49:20+01:00",
+        "commit_hash": "57fe0252b0e33c678c712cec72c9eb09cd060505",
+        "deletions": 5,
+        "files_changed": 1,
+        "insertions": 25,
         "isMerge": false,
         "message": "Updated travis"
     },
