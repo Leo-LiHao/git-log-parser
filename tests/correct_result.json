@@ -89,6 +89,20 @@
             "name": "Gabor Antal"
         },
         "change_id": null,
+        "commit_date": "2020-02-28 21:49:20+01:00",
+        "commit_hash": "57fe0252b0e33c678c712cec72c9eb09cd060505",
+        "deletions": 5,
+        "files_changed": 1,
+        "insertions": 25,
+        "isMerge": false,
+        "message": "Updated travis"
+    },
+    {
+        "author": {
+            "email": "antal@inf.u-szeged.hu",
+            "name": "Gabor Antal"
+        },
+        "change_id": null,
         "commit_date": "2020-02-28 22:13:34+01:00",
         "commit_hash": "52597cd95c8f9b32ab5494b62d4e243dcc200453",
         "deletions": 4,
@@ -150,20 +164,6 @@
         "deletions": 8,
         "files_changed": 1,
         "insertions": 26,
-        "isMerge": false,
-        "message": "Updated travis"
-    },
-    {
-        "author": {
-            "email": "antal@inf.u-szeged.hu",
-            "name": "Gabor Antal"
-        },
-        "change_id": null,
-        "commit_date": "2020-02-28 21:49:20+01:00",
-        "commit_hash": "57fe0252b0e33c678c712cec72c9eb09cd060505",
-        "deletions": 5,
-        "files_changed": 1,
-        "insertions": 25,
         "isMerge": false,
         "message": "Updated travis"
     },

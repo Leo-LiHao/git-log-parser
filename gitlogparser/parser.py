@@ -43,12 +43,12 @@ def mine_logs(dir):
 def mine_stats(before_commit, after_commit, isMerge=False):
     # git log --pretty=%P -1 commit
     if isMerge:
-        asd = subprocess.getoutput('git diff ' + before_commit + ' ' + after_commit + ' --shortstat')
-        print('------------------------------ \n' + before_commit + '\n' + after_commit + '\n' + asd+ '\n')
+        return subprocess.getoutput('git diff ' + before_commit + ' ' + after_commit + ' --shortstat')
+        #print('------------------------------ \n' + before_commit + '\n' + after_commit + '\n' + asd+ '\n')
     else:
         parent = subprocess.getoutput('git log --pretty=%P -1 ' + after_commit)
-        asd = subprocess.getoutput('git diff ' + parent + ' ' + after_commit + ' --shortstat')
-    return asd
+        return subprocess.getoutput('git diff ' + parent + ' ' + after_commit + ' --shortstat')
+
 
 def get_log(args):
     # attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
@@ -106,8 +106,8 @@ class GitLogParser(object):
     def __init__(self):
         self.commits = []
 
-    def commit_sort(self, e):
-        return e.commit_date
+    #def commit_sort(self, e):
+    #    return e.commit_date
 
     def get_update_data(self, location):
         #saves the home directory
@@ -146,8 +146,8 @@ class GitLogParser(object):
                 #if a part of a statistic is missing the keys vary, but they always start the same way
                 for key in stat_dict:
                     if key.startswith('file'):
-                        if(stat_dict[key] > 1000):
-                            print(self.commits[current_commit].commit_hash)
+                        #if(stat_dict[key] > 1000):
+                        #    print(self.commits[current_commit].commit_hash)
                         self.commits[current_commit].files_changed = stat_dict[key]
 
                     if key.startswith('insertion'):
