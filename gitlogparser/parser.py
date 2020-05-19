@@ -7,7 +7,7 @@ import json
 import concurrent.futures
 
 from . import models
-
+from github import Github
 
 def parse_datetime(date_string):
     """Simple method to parse string into datetime object if possible.
@@ -40,21 +40,24 @@ def mine_logs(dir):
 
     return git_result
 
-def mine_stats(before_commit, after_commit, isMerge=False):
-    # git log --pretty=%P -1 commit
+def mine_stats(commit_hash, gitObj=None, isMerge=False):
     if isMerge:
-        return subprocess.getoutput('git diff ' + before_commit + ' ' + after_commit + ' --shortstat')
-        #print('------------------------------ \n' + before_commit + '\n' + after_commit + '\n' + asd+ '\n')
+        commit = gitObj.get_commit(sha=commit_hash) 
+        return [
+            len(commit.files),
+            commit.stats.additions,
+            commit.stats.deletions
+        ]
     else:
-        parent = subprocess.getoutput('git log --pretty=%P -1 ' + after_commit)
-        return subprocess.getoutput('git diff ' + parent + ' ' + after_commit + ' --shortstat')
+        parent = subprocess.getoutput('git log --pretty=%P -1 ' + commit_hash)
+        return subprocess.getoutput('git diff ' + parent + ' ' + commit_hash + ' --shortstat')
 
 
 def get_log(args):
     # attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
     if args.directory:
         try:
-            create_json(mine_logs(args.directory), args.directory)
+            create_json(mine_logs(args.directory), args.directory, args.github_token)
             return
         except Exception as ex:
             print(ex)
@@ -70,8 +73,7 @@ def get_log(args):
                     # no exception is handeled here, since only the previously extracted directories are being opened
                     # hidden directories are ignored
                     if dir[0] != '.':
-                        # an extra return is added to make the parser clucky when used as a lib
-                        create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, dir)
+                        create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, args.github_token, dir)
                 return
 
         except Exception as ex:
@@ -81,12 +83,13 @@ def get_log(args):
 
 
 # process the mined data and store it in JSON
-def create_json(git_log_result, current_path, attempted_directory=None):
+def create_json(git_log_result, current_path, Github_token=None, attempted_directory=None):
     logParser = GitLogParser()
     try:
         logParser.parse_lines(git_log_result)
         #the update data extraction is a separate function, since it assumes that every commit has aleady been mined
-        logParser.get_update_data(current_path)
+        if Github_token:
+            logParser.get_update_data(current_path, Github_token)
     except models.UnexpectedLineError as ex:
         if 'fatal: not a git repository' in str(ex):
             if attempted_directory:
@@ -109,7 +112,7 @@ class GitLogParser(object):
     #def commit_sort(self, e):
     #    return e.commit_date
 
-    def get_update_data(self, location):
+    def get_update_data(self, location, github_token):
         #saves the home directory
         base_dir = os.getcwd()
 
@@ -121,40 +124,44 @@ class GitLogParser(object):
         #opens the target dir, mines it then returns the result
         os.chdir(location)
 
-        # the stored commit list has to be sorted
-        # self.commits.sort(key=self.commit_sort, reverse=True)
-
+        url = subprocess.getoutput('git config --get remote.origin.url').split('.')[1]
+        url = list(filter(None, url.split('/')))
+        url = url[-2] + '/' + url[-1] 
+        repo = Github(github_token).get_repo(url)
 
         #get the stats on multple threads to increase performance
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = list()
             for i in range(len(self.commits)-2, -1, -1):
-                results.append(executor.submit(mine_stats, self.commits[i+1].commit_hash, self.commits[i].commit_hash, self.commits[i].isMerge))
+                results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge))
         
             #this is needed since the commits are in a different order then the results
             current_commit = len(self.commits)-2
         
-            #concurrent.futures.wait(results)
             for r in results:
-                stat_dict = dict()
-                # since the result method stop the code until the thread finishes, we don't have to wait for the results to come in anywhere else
-                stats = r.result().split()
-                # since all 3 stats can be 0 in which case they are not displayed, this loop is needed to create a dict based on the existing ones
-                for j in range(1, len(stats)):
-                    if stats[j-1].isdigit():
-                        stat_dict[stats[j]] = int(stats[j-1])
-                #if a part of a statistic is missing the keys vary, but they always start the same way
-                for key in stat_dict:
-                    if key.startswith('file'):
-                        #if(stat_dict[key] > 1000):
-                        #    print(self.commits[current_commit].commit_hash)
-                        self.commits[current_commit].files_changed = stat_dict[key]
+                if self.commits[current_commit].isMerge:
+                    resultList = r.result()
+                    self.commits[current_commit].files_changed = resultList[0]
+                    self.commits[current_commit].insertions = resultList[1]
+                    self.commits[current_commit].deletions = resultList[2]
+                else:
+                    stat_dict = dict()
+                    # since the result method stop the code until the thread finishes, we don't have to wait for the results to come in anywhere else
+                    stats = r.result().split()
+                    # since all 3 stats can be 0 in which case they are not displayed, this loop is needed to create a dict based on the existing ones
+                    for j in range(1, len(stats)):
+                        if stats[j-1].isdigit():
+                            stat_dict[stats[j]] = int(stats[j-1])
+                    #if a part of a statistic is missing the keys vary, but they always start the same way
+                    for key in stat_dict:
+                        if key.startswith('file'):
+                            self.commits[current_commit].files_changed = stat_dict[key]
 
-                    if key.startswith('insertion'):
-                        self.commits[current_commit].insertions = stat_dict[key]
+                        if key.startswith('insertion'):
+                            self.commits[current_commit].insertions = stat_dict[key]
 
-                    if key.startswith('deletion'):
-                        self.commits[current_commit].deletions = stat_dict[key]
+                        if key.startswith('deletion'):
+                            self.commits[current_commit].deletions = stat_dict[key]
                 current_commit = current_commit - 1
 
         os.chdir(base_dir)
@@ -244,4 +251,3 @@ class CommitEncoder(json.JSONEncoder):
                 encoded_logs.append(commit.to_json())
             return encoded_logs
         return super(CommitEncoder, self).default(obj)
-

@@ -95,6 +95,7 @@ def test_dummy_commit_singleDir():
     class dummyArgs(object):
         def __init__(self, dir):
             self.directory = dir
+            self.github_token = None
     subprocess.run('git clone https://github.com/gaborantal/git-log-parser.git', cwd='./tests', shell=True)
     subprocess.run('git checkout 86e684ddfb16f98f09211bb8087b6d321b25c145', cwd='./tests/git-log-parser', shell=True)
     args = dummyArgs('./tests/git-log-parser')
@@ -110,9 +111,9 @@ def test_dummmy_commit_mDir():
         def __init__(self, dir):
             self.directory = None
             self.multiple_directories = dir
+            self.github_token = None
     args = dummyArgs('./tests')
     parser.get_log(args)
-    print(subprocess.run('ls'))
     with open('./tests/correct_result.json', 'r', encoding='utf-8') as f:
         with open('./logdata_git-log-parser.json', 'r', encoding='utf-8') as f2:
             correct_result = json.load(f)
