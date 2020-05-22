@@ -42,6 +42,9 @@ def mine_logs(dir):
 
 def mine_stats(commit_hash, gitObj=None, isMerge=False):
     if isMerge:
+        # if the commit in question is a merge commit, it has multiple parents
+        # the handling of this issue would be too expensive for a tool like this, so here I consult the git api
+        # this well not reach the request limit, since merge commits tend to be rare
         commit = gitObj.get_commit(sha=commit_hash) 
         return [
             len(commit.files),
@@ -49,6 +52,7 @@ def mine_stats(commit_hash, gitObj=None, isMerge=False):
             commit.stats.deletions
         ]
     else:
+        # the commit in question is not a merge, it only has one parent
         parent = subprocess.getoutput('git log --pretty=%P -1 ' + commit_hash)
         return subprocess.getoutput('git diff ' + parent + ' ' + commit_hash + ' --shortstat')
 
@@ -124,9 +128,14 @@ class GitLogParser(object):
         #opens the target dir, mines it then returns the result
         os.chdir(location)
 
+        # a connection to the mined repository is being created here, using the provided token
+
+        # the url needod for the repo is being mined here
         url = subprocess.getoutput('git config --get remote.origin.url').split('.')[1]
         url = list(filter(None, url.split('/')))
         url = url[-2] + '/' + url[-1] 
+        
+        # this is where the repo gets readied using the github token provided at the start of the script
         repo = Github(github_token).get_repo(url)
 
         #get the stats on multple threads to increase performance
@@ -139,6 +148,7 @@ class GitLogParser(object):
             current_commit = len(self.commits)-2
         
             for r in results:
+                # Merge commits are handeled differently
                 if self.commits[current_commit].isMerge:
                     resultList = r.result()
                     self.commits[current_commit].files_changed = resultList[0]
