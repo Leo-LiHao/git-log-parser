@@ -5,6 +5,9 @@ import subprocess
 import os
 import json
 import concurrent.futures
+import time
+
+import progressbar
 
 from . import models
 from github import Github
@@ -40,8 +43,9 @@ def mine_logs(dir):
 
     return git_result
 
-def mine_stats(commit_hash, gitObj=None, isMerge=False):
+def mine_stats(commit_hash, gitObj=None, isMerge=False, sleep_amount=0):
     if isMerge:
+        time.sleep(sleep_amount)
         commit = gitObj.get_commit(sha=commit_hash) 
         return [
             len(commit.files),
@@ -132,13 +136,20 @@ class GitLogParser(object):
         #get the stats on multple threads to increase performance
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = list()
+            sleep_time = 0
             for i in range(len(self.commits)-2, -1, -1):
-                results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge))
+                # since the git api allows 5000 requests per hour a sleep is reuqired
+                if self.commits[i].isMerge:
+                    results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge,sleep_time))
+                    sleep_time = sleep_time + 0.73
+                else:
+                    results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge))
         
             #this is needed since the commits are in a different order then the results
             current_commit = len(self.commits)-2
         
-            for r in results:
+            print('Getting diff data')
+            for r in progressbar.progressbar(results):
                 if self.commits[current_commit].isMerge:
                     resultList = r.result()
                     self.commits[current_commit].files_changed = resultList[0]
@@ -207,7 +218,8 @@ class GitLogParser(object):
         if commit is None:
             commit = models.CommitData()
         # iterate lines and save
-        for nextLine in raw_lines.splitlines():
+        print('Parsing lines')
+        for nextLine in progressbar.progressbar(raw_lines.splitlines()):
             #print(nextLine)
             if len(nextLine.strip()) == 0:
                 # ignore empty lines
@@ -232,12 +244,11 @@ class GitLogParser(object):
             elif bool(re.match('    change-id: ', nextLine, re.IGNORECASE)):
                 self.parse_change_id(nextLine, commit)
             else:
+                print()
                 print(models.UnexpectedLineError(nextLine))
 
         if len(self.commits) != 0:
             self.commits.append(commit)
-
-
 
         return commit
 

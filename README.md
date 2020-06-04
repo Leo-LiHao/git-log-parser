@@ -16,6 +16,8 @@ Each option needs either a full or relative route to the directory.
 
 From the mined data a json file will be created. If only a single directory was mined the json's name will be logdata_new.json, but if -mDir was given, each created file will be named after the mined repository in the following manner: logdata_*YourMinedRepo*.json
 
+If the -GHT argument is specified, the commit diff-s (line/file changes) will also be mined. This is optional, since it takes a while, and requires a GitHub access token.
+
 The console will only display errors. In the case of a succesfull execution the files will be created in the same directory where the gitlogparser command was issued.
 
 ## Example
