@@ -8,9 +8,7 @@ def main():
     group = arg_parser.add_mutually_exclusive_group(required=True)
     group.add_argument('-dir', '--directory', metavar='', help='Extracts the specified directory as a repo')
     group.add_argument('-mDir', '--multiple_directories', metavar='', help='Extracts every subdirectory as a repo')
-    
-    arg_parser.add_argument('-diff', '--get_diff', action='store_true', default=False, help='If given, will cause the parser to extract line and file changes')
-    
+    arg_parser.add_argument('-GHT', '--github_token', default=None ,metavar='', help='Your github access token, if specified, the parser will get the line/file changes of each commit')
     args = arg_parser.parse_args()
     parser.get_log(args)
 

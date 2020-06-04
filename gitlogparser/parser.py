@@ -5,10 +5,9 @@ import subprocess
 import os
 import json
 import concurrent.futures
-import requests
 
 from . import models
-from bs4 import BeautifulSoup
+from github import Github
 
 def parse_datetime(date_string):
     """Simple method to parse string into datetime object if possible.
@@ -41,12 +40,15 @@ def mine_logs(dir):
 
     return git_result
 
-def mine_stats(commit_hash, linkBase, isMerge=False):
+def mine_stats(commit_hash, gitObj=None, isMerge=False):
     if isMerge:
-        # to scrape the merge commits, a the html of the commit's page is needed
-        return requests.get(linkBase + commit_hash)
+        commit = gitObj.get_commit(sha=commit_hash) 
+        return [
+            len(commit.files),
+            commit.stats.additions,
+            commit.stats.deletions
+        ]
     else:
-        # the commit in question is not a merge, it only has one parent
         parent = subprocess.getoutput('git log --pretty=%P -1 ' + commit_hash)
         return subprocess.getoutput('git diff ' + parent + ' ' + commit_hash + ' --shortstat')
 
@@ -55,7 +57,7 @@ def get_log(args):
     # attempt to read the git log from the user specified directory, if it fails, notify them and leave the function
     if args.directory:
         try:
-            create_json(mine_logs(args.directory), args.directory, args.get_diff)
+            create_json(mine_logs(args.directory), args.directory, args.github_token)
             return
         except Exception as ex:
             print(ex)
@@ -71,7 +73,7 @@ def get_log(args):
                     # no exception is handeled here, since only the previously extracted directories are being opened
                     # hidden directories are ignored
                     if dir[0] != '.':
-                        create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, args.get_diff, dir)
+                        create_json(mine_logs(args.multiple_directories + '/' + dir), args.multiple_directories + '/' + dir, args.github_token, dir)
                 return
 
         except Exception as ex:
@@ -81,13 +83,13 @@ def get_log(args):
 
 
 # process the mined data and store it in JSON
-def create_json(git_log_result, current_path, get_diff=False, attempted_directory=None):
+def create_json(git_log_result, current_path, Github_token=None, attempted_directory=None):
     logParser = GitLogParser()
     try:
         logParser.parse_lines(git_log_result)
         #the update data extraction is a separate function, since it assumes that every commit has aleady been mined
-        if get_diff:
-            logParser.get_update_data(current_path)
+        if Github_token:
+            logParser.get_update_data(current_path, Github_token)
     except models.UnexpectedLineError as ex:
         if 'fatal: not a git repository' in str(ex):
             if attempted_directory:
@@ -110,7 +112,7 @@ class GitLogParser(object):
     #def commit_sort(self, e):
     #    return e.commit_date
 
-    def get_update_data(self, location):
+    def get_update_data(self, location, github_token):
         #saves the home directory
         base_dir = os.getcwd()
 
@@ -122,37 +124,26 @@ class GitLogParser(object):
         #opens the target dir, mines it then returns the result
         os.chdir(location)
 
-        # a connection to the mined repository is being created here, using the provided token
-
-        # the base url needed for the scraping is being mined here
-        url = subprocess.getoutput('git config --get remote.origin.url')
-        url = url.replace('.git', '/commit/')
+        url = subprocess.getoutput('git config --get remote.origin.url').split('.')[1]
+        url = list(filter(None, url.split('/')))
+        url = url[-2] + '/' + url[-1] 
+        repo = Github(github_token).get_repo(url)
 
         #get the stats on multple threads to increase performance
         with concurrent.futures.ThreadPoolExecutor() as executor:
             results = list()
             for i in range(len(self.commits)-2, -1, -1):
-                results.append(executor.submit(mine_stats, self.commits[i].commit_hash, url, self.commits[i].isMerge))
+                results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge))
         
             #this is needed since the commits are in a different order then the results
             current_commit = len(self.commits)-2
         
             for r in results:
-                # Merge commits are handeled differently
                 if self.commits[current_commit].isMerge:
-                    html = r.result()
-                    # html requested earlier gets parsed using BeautifulSoup
-                    soup = BeautifulSoup(html.text, 'html.parser')
-                    container = soup.find(class_='toc-diff-stats')
-                    self.commits[current_commit].files_changed = container.find('button').get_text().strip().split()[0]
-                    
-                    for i in container.find_all('strong'):
-                        i = i.get_text()
-                        if 'add' in i:
-                            self.commits[current_commit].insertions = i.split()[0]
-                        else:
-                            self.commits[current_commit].deletions = i.split()[0]
-                
+                    resultList = r.result()
+                    self.commits[current_commit].files_changed = resultList[0]
+                    self.commits[current_commit].insertions = resultList[1]
+                    self.commits[current_commit].deletions = resultList[2]
                 else:
                     stat_dict = dict()
                     # since the result method stop the code until the thread finishes, we don't have to wait for the results to come in anywhere else
