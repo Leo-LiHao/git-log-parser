@@ -149,7 +149,6 @@ class GitLogParser(object):
                     # when calculating the sleep time, I expect the worst case possible, meaning that every process is making an API call
                     if sleep_time < multiprocessing.cpu_count() * MAX_INVERVAL * 5:
                         sleep_time = sleep_time + MAX_INVERVAL
-                    print(sleep_time)
                 else:
                     results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge))
         

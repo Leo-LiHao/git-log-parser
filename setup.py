@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="gitlogparser",
-    version="0.1.4",
+    version="0.1.5",
     author="Gabor Antal",
     author_email="antalgabor1993@gmail.com",
     description="Parser for 'git log' command",
