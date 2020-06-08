@@ -6,6 +6,7 @@ import os
 import json
 import concurrent.futures
 import time
+import multiprocessing
 
 import progressbar
 
@@ -134,14 +135,21 @@ class GitLogParser(object):
         repo = Github(github_token).get_repo(url)
 
         #get the stats on multple threads to increase performance
-        with concurrent.futures.ThreadPoolExecutor() as executor:
+        # the number of workers is specified as the number of cpus*5, this is the current default, however for the future it is safer this way
+        with concurrent.futures.ThreadPoolExecutor(
+            max_workers=multiprocessing.cpu_count()*5
+            ) as executor:
             results = list()
+            MAX_INVERVAL=0.73
             sleep_time = 0
             for i in range(len(self.commits)-2, -1, -1):
                 # since the git api allows 5000 requests per hour a sleep is reuqired
                 if self.commits[i].isMerge:
                     results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge,sleep_time))
-                    sleep_time = sleep_time + 0.73
+                    # when calculating the sleep time, I expect the worst case possible, meaning that every process is making an API call
+                    if sleep_time < multiprocessing.cpu_count() * MAX_INVERVAL * 5:
+                        sleep_time = sleep_time + MAX_INVERVAL
+                    print(sleep_time)
                 else:
                     results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge))
         
