@@ -26,7 +26,7 @@ def parse_datetime(date_string):
         return datetime.datetime.strptime(date_string, FORMAT_STRING)
     except ValueError:
         return date_string
-# gitlogparser -dir C:\Users\Hex\source\repos\cve-miner\repos\core
+
 #both types of directory mining happens here, the bool variable decides which will be choosen
 def mine_logs(dir):
     #saves the home directory
@@ -114,9 +114,6 @@ class GitLogParser(object):
     def __init__(self):
         self.commits = []
 
-    #def commit_sort(self, e):
-    #    return e.commit_date
-
     def get_update_data(self, location, github_token, no_merge):
         #saves the home directory
         base_dir = os.getcwd()
@@ -135,7 +132,7 @@ class GitLogParser(object):
             url = url[-2] + '/' + url[-1] 
             repo = Github(github_token).get_repo(url)
 
-        #get the stats on multple threads to increase performance
+        # get the stats on multiple threads to increase performance
         # the number of workers is specified as the number of cpus*5, this is the current default, however for the future it is safer this way
         with concurrent.futures.ThreadPoolExecutor(
             max_workers=multiprocessing.cpu_count()*5
@@ -144,7 +141,7 @@ class GitLogParser(object):
             MAX_INVERVAL=0.73
             sleep_time = 0
             for i in range(len(self.commits)-2, -1, -1):
-                # since the git api allows 5000 requests per hour a sleep is reuqired
+                # since the git api allows 5000 requests per hour a sleep is required
                 # if the -nm handle is specified the merge results will not be accurate, but the parser will finish quicker
                 if self.commits[i].isMerge and not no_merge:
                     results.append(executor.submit(mine_stats, self.commits[i].commit_hash, repo, self.commits[i].isMerge,sleep_time))
@@ -154,13 +151,12 @@ class GitLogParser(object):
                 else:
                     results.append(executor.submit(mine_stats, self.commits[i].commit_hash, isMerge=self.commits[i].isMerge))
         
-            #this is needed since the commits are in a different order then the results
+            # this is needed since the commits are in a different order then the results
             current_commit = len(self.commits)-2
         
             print('Getting diff data')
             for r in progressbar.progressbar(results):
                 if self.commits[current_commit].isMerge:
-                    #resultList = r.result()
                     if no_merge:
                         self.commits[current_commit].files_changed = 0
                         self.commits[current_commit].insertions = 0
@@ -178,7 +174,7 @@ class GitLogParser(object):
                     for j in range(1, len(stats)):
                         if stats[j-1].isdigit():
                             stat_dict[stats[j]] = int(stats[j-1])
-                    #if a part of a statistic is missing the keys vary, but they always start the same way
+                    # if a part of a statistic is missing the keys vary, but they always start the same way
                     for key in stat_dict:
                         if key.startswith('file'):
                             self.commits[current_commit].files_changed = stat_dict[key]
